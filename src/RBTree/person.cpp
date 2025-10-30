@@ -20,3 +20,7 @@ std::string Person::get_destination(){
 int Person::get_birthday(){
     return birthday;
 }
+
+int Person::get_id(){
+    return id;
+}
