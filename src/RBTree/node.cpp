@@ -12,3 +12,7 @@ void Node::flip_color(){
 Person* Node::get_data(){
     return person;
 }
+
+Node::Node(Person* p){
+    person = p;
+}

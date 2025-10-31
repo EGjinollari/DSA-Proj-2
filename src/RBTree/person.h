@@ -5,19 +5,21 @@
 class Person{
     private:
         
-    int id;
+    std::string id;
     std::string first_name;
     std::string last_name;
-    int birthday;
+    std::string birthday;
     std::string origin;
     std::string destination;
 
 
     public:
+    Person(int id, std::string fn, std::string ln, int bday, std::string o, std::string d);
+    
     std::string get_first();
     std::string get_last();
-    int get_birthday();
-    int get_id();
+    std::string get_birthday();
+    std::string get_id();
     std::string get_origin();
     std::string get_destination();
 
