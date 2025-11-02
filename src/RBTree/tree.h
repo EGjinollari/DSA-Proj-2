@@ -11,53 +11,30 @@ class RBTree {
 
     RBTree(Node* root);
     ~RBTree();
-    void Deletion_Helper(Node* root);
+
+    void Delete(Node* root, std::string target);
+    virtual Node* Delete_Helper(Node* root, std::string target, Node*& successor, bool& color) = 0;
+    void Destructor_Helper(Node* root);
+
     std::vector<Person*> Search(std::string &val);
     virtual void Search_Helper(Node* root, std::vector<Person*> &vec, std::string val) = 0;
     
     void Insert(int id, std::string fn, std::string ln, int bday, std::string origin, std::string dest);
     virtual Node* Insert_Helper(Node* root, Person* p, std::string val) = 0;
-};
-// Implement a parent RBTree class and have all the categories of RBTrees
-// inherit from it and overide search, insert, delete.
 
-class IDRBTree: public RBTree {
-    public:
-    void Search_Helper(Node* root, std::vector<Person*> &vec, std::string val) override;
-    Node* Insert_Helper(Node* root, Person* p, std::string val) override;
-};
-class FNRBTree: public RBTree {
-    public:
-    void Search_Helper(Node* root, std::vector<Person*> &vec, std::string val) override;
-    Node* Insert_Helper(Node* root, Person* p,std::string val) override;
-};
-class LNRBTree: public RBTree {
-    public:
-    void Search_Helper(Node* root, std::vector<Person*> &vec, std::string val) override;
-    Node* Insert_Helper(Node* root, Person* p, std::string val) override;
-};
-class ORIRBTree: public RBTree {
-    public:
-    void Search_Helper(Node* root, std::vector<Person*> &vec, std::string val) override;
-    Node* Insert_Helper(Node* root, Person* p, std::string val) override;
-};
-class DESRBTree: public RBTree {
-    public:
-    void Search_Helper(Node* root, std::vector<Person*> &vec, std::string val) override;
-    Node* Insert_Helper(Node* root, Person* p, std::string val) override;
-};
-class BDRBTree: public RBTree {
-    public:
-    void Search_Helper(Node* root, std::vector<Person*> &vec, std::string val) override;
-    Node* Insert_Helper(Node* root, Person* p, std::string val) override;
+    void InsertBalance(Node* node);
+    void DeleteBalance(Node* node);
+    void LRotate(Node* root);
+    void RRotate(Node* root);
+
 };
 
 /*
 TODO:
 Search X
 Insert X
-Delete
+Delete X
 Balance
-
+Link all the trees together
 
 */

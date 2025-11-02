@@ -6,18 +6,18 @@ RBTree::RBTree(Node* root){
     this->root = root;
 }
 
-void RBTree::Deletion_Helper(Node* root){
+void RBTree::Destructor_Helper(Node* root){
     if (!root){
         return;
     }
 
-    Deletion_Helper(root->left);
-    Deletion_Helper(root->right);
+    Destructor_Helper(root->left);
+    Destructor_Helper(root->right);
     delete root;
 }
 
 RBTree::~RBTree(){
-    Deletion_Helper(root);
+    Destructor_Helper(root);
 }
 
 std::vector<Person*> RBTree::Search(std::string &name)  {
@@ -25,11 +25,146 @@ std::vector<Person*> RBTree::Search(std::string &name)  {
     Search_Helper(root, vec, name);
     return vec;
 }
+void RBTree::DeleteBalance(Node* node) {
+    while (node != root && (node == nullptr || node->color == 0)) {
+        Node* p = node->parent;
+        if (node == p->left) {
+            Node* u = p->right;
+            if (u && u->color == 1) {
+                u->flip_color();
+                p->flip_color();
+                LRotate(p);
+                u = p->right;
+            }
+            if ((!u->left || u->left->color == 0) && (!u->right || u->right->color == 0)) {
+                if (u) {
+                    u->flip_color();
+                }
+                node = p;
+            } 
+            else {
+                if (!u->right || u->right->color == 0) {
+                    if (u->left) {
+                        u->left->flip_color();
+                    }
+                    u->flip_color();
+                    RRotate(u);
+                    u = p->right;
+                }
+                u->color = p->color;
+                p->color = 0;
+                if (u->right) {
+                    u->right->color = 0;
+                }
+                LRotate(p);
+                node = root;
+            }
+        } 
+        else {
+            Node* u = p->left;
+            if (u && u->color == 1) {
+                u->flip_color();
+                p->flip_color();
+                RRotate(p);
+                u = p->left;
+            }
+            if ((!u->right || u->right->color == 0) && (!u->left || u->left->color == 0)) {
+                if (u) {
+                    u->flip_color();
+                }
+                node = p;
+            } 
+            else {
+                if (!u->left || u->left->color == 0) {
+                    if (u->right){ 
+                        u->right->flip_color();
+                    }
+                    u->flip_color();
+                    LRotate(u);
+                    u = p->left;
+                }
+                u->color = p->color;
+                p->color = 0;
+                if (u->left){ 
+                    u->left->color = 0;
+                }
+                RRotate(p);
+                node = root;
+            }
+        }
+    }
+    if (node) {
+        node->color = 0;
+    }
+}
+
+
+void RBTree::InsertBalance(Node* node){
+    Node* p = nullptr;
+    Node* gp = nullptr;
+
+    while((node != root) && (node->color == 1) && (node->parent->color == 1)){
+        p = node->parent;
+        gp = p->parent;
+        if (!gp){break;}
+
+        if (p == gp->left){
+            Node* u = gp->right;
+
+            if (u != nullptr && u->color == 1){
+                gp->flip_color();
+                p->flip_color();
+                u->flip_color();
+                node = gp;
+            }
+            else{
+                if (node == p->right) {
+                    LRotate(p);
+                    node = p;
+                    p = node->parent;
+                }
+                RRotate(gp);
+                int temp = p->color;
+                p->color = gp->color;
+                gp->color = temp;
+                node = p;
+            }
+        }
+        else{
+            Node* u = gp->left;
+
+            if (u != nullptr && u->color == 1){
+                gp->flip_color();
+                p->flip_color();
+                u->flip_color();
+                node = gp;
+            }
+            else{
+                if (node == p->left){
+                    RRotate(p);
+                    node = p;
+                    p = node->parent;
+                }
+                LRotate(gp);
+                int temp = p->color;
+                p->color = gp->color;
+                gp->color = temp;
+                node = p;
+            }
+        }
+    }
+    while(node->parent != nullptr){
+        node = node->parent;
+    }
+    root = node;
+    root->color = 0;
+
+}
 
 void RBTree::Insert(int id, std::string fn, std::string ln, int bday, std::string origin, std::string dest){
     bool unique = true;
     for (auto i: taken_ids){
-        if (i = id){
+        if (i == id){
             unique = false;
             break;
         }
@@ -37,152 +172,62 @@ void RBTree::Insert(int id, std::string fn, std::string ln, int bday, std::strin
 
     if (unique){
         Person* p = new Person(id, fn, ln, bday, origin, dest);
-        root = Insert_Helper(root, p, std::to_string(id));
+        InsertBalance(Insert_Helper(root, p, std::to_string(id)));
+        taken_ids.push_back(id);
     }
 
 }
 
-// ID Tree
-
-void IDRBTree::Search_Helper(Node* root, std::vector<Person*> &vec, std::string val){
-    if (!root) {
-        return;
+void RBTree::Delete(Node* root, std::string target){
+    Node* node = nullptr;
+    bool color = 1;
+    root = Delete_Helper(root, target, node, color);
+    if (color == 0){
+        DeleteBalance(node);
     }
-    if (root->get_data()->get_id() == val) {
-        vec.push_back(root->get_data());
+    if (root){
+        root->color = 0;
     }
-    Search_Helper(root->left, vec, val);
-    Search_Helper(root->right, vec, val);
 }
 
-Node* IDRBTree::Insert_Helper(Node* root, Person* p, std::string val){
-    if (!root){
-        return new Node(p);
+void RBTree::LRotate(Node* root){
+    Node* right = root->right;
+    root->right = right->left;
+    if (right-> left != nullptr){
+        right->left->parent = root;
     }
-    if (stoi(root->get_data()->get_id()) < stoi(val)){
-        root->right = Insert_Helper(root->right, p, val);
-    }else{
-        root->left = Insert_Helper(root->left, p, val);
-    } 
-}
-
-// BD Tree
-
-
-void BDRBTree::Search_Helper(Node* root, std::vector<Person*> &vec, std::string val){
-    if (!root) {
-        return;
+    right->parent = root->parent;
+    if(root->parent == nullptr){
+        this->root = right;
     }
-    if (root->get_data()->get_birthday() == val) {
-        vec.push_back(root->get_data());
+    else if (root == root->parent->left){
+        root->parent->left = right;
     }
-    Search_Helper(root->left, vec, val);
-    Search_Helper(root->right, vec, val);
-}
-
-Node* BDRBTree::Insert_Helper(Node* root, Person* p, std::string val){
-    if (!root){
-        return new Node(p);
+    else{
+        root->parent->right = right;
     }
-    if (stoi(root->get_data()->get_birthday()) < stoi(val)){
-        root->right = Insert_Helper(root->right, p, val);
-    }else{
-        root->left = Insert_Helper(root->left, p, val);
-    } 
-}
-
-// First Name Tree
-
-void FNRBTree::Search_Helper(Node* root, std::vector<Person*> &vec, std::string val){
-    if (!root) {
-        return;
-    }
-    if (root->get_data()->get_first() == val) {
-        vec.push_back(root->get_data());
-    }
-    Search_Helper(root->left, vec, val);
-    Search_Helper(root->right, vec, val);
-}
-
-Node* FNRBTree::Insert_Helper(Node* root, Person* p, std::string val){
-    if (!root){
-        return new Node(p);
-    }
-    if (root->get_data()->get_first() < val){
-        root->right = Insert_Helper(root->right, p, val);
-    }else{
-        root->left = Insert_Helper(root->left, p, val);
-    } 
-}
-
-// Last Name Tree
-void LNRBTree::Search_Helper(Node* root, std::vector<Person*> &vec, std::string val){
-    if (!root) {
-        return;
-    }
-    if (root->get_data()->get_last() == val) {
-        vec.push_back(root->get_data());
-    }
-    Search_Helper(root->left, vec, val);
-    Search_Helper(root->right, vec, val);
-}
-
-Node* LNRBTree::Insert_Helper(Node* root, Person* p, std::string val){
-    if (!root){
-        return new Node(p);
-    }
-    if (root->get_data()->get_last() < val){
-        root->right = Insert_Helper(root->right, p, val);
-    }else{
-        root->left = Insert_Helper(root->left, p, val);
-    } 
-}
-
-// Origin Tree
-
-void ORIRBTree::Search_Helper(Node* root, std::vector<Person*> &vec, std::string val){
-    if (!root) {
-        return;
-    }
-    if (root->get_data()->get_origin() == val) {
-        vec.push_back(root->get_data());
-    }
-    Search_Helper(root->left, vec, val);
-    Search_Helper(root->right, vec, val);
+    right->left = root;
+    root->parent = right;
 
 }
 
-Node* ORIRBTree::Insert_Helper(Node* root, Person* p, std::string val){
-    if (!root){
-        return new Node(p);
+void RBTree::RRotate(Node* root){
+    Node* left = root->left;
+    root->left = left->right;
+    if (left-> right != nullptr){
+        left->right->parent = root;
     }
-    if (root->get_data()->get_origin() < val){
-        root->right = Insert_Helper(root->right, p, val);
-    }else{
-        root->left = Insert_Helper(root->left, p, val);
-    } 
-}
-// Destination Tree
+    left->parent = root->parent;
+    if(root->parent == nullptr){
+        this->root = left;
+    }
+    else if (root == root->parent->right){
+        root->parent->right = left;
+    }
+    else{
+        root->parent->left = left;
+    }
+    left->right = root;
+    root->parent = left;
 
-void DESRBTree::Search_Helper(Node* root, std::vector<Person*> &vec, std::string val){
-    if (!root) {
-        return;
-    }
-    if (root->get_data()->get_destination() == val) {
-        vec.push_back(root->get_data());
-    }
-    Search_Helper(root->left, vec, val);
-    Search_Helper(root->right, vec, val);
 }
-
-Node* FNRBTree::Insert_Helper(Node* root, Person* p, std::string val){
-    if (!root){
-        return new Node(p);
-    }
-    if (root->get_data()->get_destination() < val){
-        root->right = Insert_Helper(root->right, p, val);
-    }else{
-        root->left = Insert_Helper(root->left, p, val);
-    } 
-}
-

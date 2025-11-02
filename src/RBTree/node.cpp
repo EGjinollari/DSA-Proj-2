@@ -16,3 +16,7 @@ Person* Node::get_data(){
 Node::Node(Person* p){
     person = p;
 }
+
+void Node::set_data(Person* p){
+    this->person = p;
+}

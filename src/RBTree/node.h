@@ -16,4 +16,5 @@ struct Node{
     bool get_color();
     void flip_color();
     Person* get_data();
+    void set_data(Person* p);
 };
