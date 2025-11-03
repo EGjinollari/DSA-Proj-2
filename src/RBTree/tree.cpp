@@ -19,7 +19,7 @@ void RBTree::Destructor_Helper(Node* root){
     delete root;
 }
 
-RBTree::~RBTree(){
+virtual RBTree::~RBTree(){
     Destructor_Helper(root);
 }
 

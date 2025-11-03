@@ -10,7 +10,7 @@ class RBTree {
     public:
     Node* get_root();
     RBTree(Node* root);
-    ~RBTree();
+    virtual ~RBTree();
 
     void Delete(Node* root, std::string target);
     virtual Node* Delete_Helper(Node* root, std::string target, Node*& successor, bool& color) = 0;

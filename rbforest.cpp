@@ -7,6 +7,15 @@
 #include "oritree.h"
 #include "destree.h"
 
+RBForest::~RBForest(){
+    delete id;
+    delete fn;
+    delete ln;
+    delete bd;
+    delete ori;
+    delete des;
+}
+
 
 RBForest::RBForest(){
     id = new IDRBTree();
