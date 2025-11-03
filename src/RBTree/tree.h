@@ -29,12 +29,3 @@ class RBTree {
 
 };
 
-/*
-TODO:
-Search X
-Insert X
-Delete X
-Balance
-Link all the trees together
-
-*/
