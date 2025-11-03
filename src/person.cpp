@@ -26,10 +26,10 @@ std::string Person::get_destination(){
     return destination;
 }
 
-int Person::get_birthday(){
+std::string Person::get_birthday(){
     return birthday;
 }
 
-int Person::get_id(){
+std::string Person::get_id(){
     return id;
 }
