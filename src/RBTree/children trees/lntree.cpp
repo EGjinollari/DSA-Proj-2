@@ -1,5 +1,7 @@
 #include "lntree.h"
 
+LNRBTree::LNRBTree() : RBTree(nullptr){}
+
 void LNRBTree::Search_Helper(Node* root, std::vector<Person*> &vec, std::string val){
     if (!root) {
         return;

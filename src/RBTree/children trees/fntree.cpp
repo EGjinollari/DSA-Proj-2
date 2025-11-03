@@ -1,5 +1,7 @@
 #include "fntree.h"
 
+FNRBTree::FNRBTree() : RBTree(nullptr){}
+
 void FNRBTree::Search_Helper(Node* root, std::vector<Person*> &vec, std::string val){
     if (!root) {
         return;

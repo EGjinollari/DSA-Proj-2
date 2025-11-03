@@ -8,7 +8,7 @@ class RBTree {
     std::vector<int> taken_ids;
     
     public:
-
+    Node* get_root();
     RBTree(Node* root);
     ~RBTree();
 

@@ -1,6 +1,9 @@
 #include "tree.h"
 #include "node.h"
 
+Node* RBTree::get_root(){
+    return this->root;
+}
 
 RBTree::RBTree(Node* root){
     this->root = root;

@@ -1,5 +1,8 @@
 #include "bdtree.h"
 
+
+BDRBTree::BDRBTree() : RBTree(nullptr){}
+
 void BDRBTree::Search_Helper(Node* root, std::vector<Person*> &vec, std::string val){
     if (!root) {
         return;

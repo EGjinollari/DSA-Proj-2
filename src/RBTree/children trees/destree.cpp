@@ -1,5 +1,7 @@
 #include "destree.h"
 
+DESRBTree::DESRBTree() : RBTree(nullptr){}
+
 void DESRBTree::Search_Helper(Node* root, std::vector<Person*> &vec, std::string val){
     if (!root) {
         return;

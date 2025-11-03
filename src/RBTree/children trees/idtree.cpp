@@ -1,4 +1,7 @@
 #include <idtree.h>
+
+IDRBTree::IDRBTree() : RBTree(nullptr){}
+
 void IDRBTree::Search_Helper(Node* root, std::vector<Person*> &vec, std::string val){
     if (!root) {
         return;

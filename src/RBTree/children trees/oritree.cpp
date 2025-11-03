@@ -1,5 +1,7 @@
 #include "oritree.h"
 
+ORIRBTree::ORIRBTree() : RBTree(nullptr){}
+
 void ORIRBTree::Search_Helper(Node* root, std::vector<Person*> &vec, std::string val){
     if (!root) {
         return;

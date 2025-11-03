@@ -1,5 +1,6 @@
 #include <vector>
 #include "tree.h"
+#include "person.h"
 
 class RBForest{
     private:
@@ -11,6 +12,9 @@ class RBForest{
     RBTree* des;
 
     public:
+    std::vector<Person*> Search(std::string category, std::string val);
+    void Delete(std::string id);
+    void Insert(int id, std::string fn, std::string ln, int bday, std::string origin, std::string dest);
     RBForest();
     ~RBForest();
 
