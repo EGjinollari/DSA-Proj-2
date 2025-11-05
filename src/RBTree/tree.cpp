@@ -5,6 +5,7 @@ Node* RBTree::get_root(){
     return this->root;
 }
 
+
 RBTree::RBTree(Node* root){
     this->root = root;
 }
@@ -185,7 +186,7 @@ void RBTree::Delete(Node* root, std::string target){
     Node* node = nullptr;
     bool color = 1;
     root = Delete_Helper(root, target, node, color);
-    if (color == 0){
+    if (color == 0 && node){
         DeleteBalance(node);
     }
     if (root){
