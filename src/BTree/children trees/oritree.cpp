@@ -25,6 +25,11 @@ std::vector<Person*> ORITree::Search(std::string val) {
 }
 
 void ORITree::Delete(std::string target) {
-    for (auto it = taken_ids.begin(); it != taken_ids.end(); ++it) {
+    for (auto it = taken_ids.begin(); it != taken_ids.end(); ) {
+        if (std::to_string(*it) == target) {
+            it = taken_ids.erase(it);
+        } else {
+            ++it;
+        }
     }
 }

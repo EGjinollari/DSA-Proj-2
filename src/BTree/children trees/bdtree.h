@@ -13,9 +13,6 @@ public:
     
     std::vector<Person*> Search(std::string val) override;
     void Delete(std::string target) override;
-    
-private:
-    void deleteHelper(BNode* node, const std::string& target);
 };
 
 #endif

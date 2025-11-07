@@ -1,155 +1,18 @@
 #include "bforest.h"
 #include "bdtree.h"
-
-class IDBTree : public BTree {
-public:
-    IDBTree(int degree = 3) : BTree(degree) {}
-    void Insert(int id, std::string fn, std::string ln, int bday, 
-                std::string origin, std::string dest) override {
-        bool unique = true;
-        for (auto i : taken_ids) {
-            if (i == id) {
-                unique = false;
-                break;
-            }
-        }
-        if (unique) {
-            Person* p = new Person(id, fn, ln, bday, origin, dest);
-            insert(p, p->get_id());
-            taken_ids.push_back(id);
-        }
-    }
-    std::vector<Person*> Search(std::string val) override {
-        std::vector<Person*> results;
-        searchHelper(root, val, results);
-        return results;
-    }
-    void Delete(std::string target) override {
-        for (auto it = taken_ids.begin(); it != taken_ids.end(); ) {
-            if (std::to_string(*it) == target) {
-                it = taken_ids.erase(it);
-            } else {
-                ++it;
-            }
-        }
-    }
-};
-
-class FNBTree : public BTree {
-public:
-    FNBTree(int degree = 3) : BTree(degree) {}
-    void Insert(int id, std::string fn, std::string ln, int bday, 
-                std::string origin, std::string dest) override {
-        bool unique = true;
-        for (auto i : taken_ids) {
-            if (i == id) {
-                unique = false;
-                break;
-            }
-        }
-        if (unique) {
-            Person* p = new Person(id, fn, ln, bday, origin, dest);
-            insert(p, p->get_first());
-            taken_ids.push_back(id);
-        }
-    }
-    std::vector<Person*> Search(std::string val) override {
-        std::vector<Person*> results;
-        searchHelper(root, val, results);
-        return results;
-    }
-    void Delete(std::string target) override {
-    }
-};
-
-class LNBTree : public BTree {
-public:
-    LNBTree(int degree = 3) : BTree(degree) {}
-    void Insert(int id, std::string fn, std::string ln, int bday, 
-                std::string origin, std::string dest) override {
-        bool unique = true;
-        for (auto i : taken_ids) {
-            if (i == id) {
-                unique = false;
-                break;
-            }
-        }
-        if (unique) {
-            Person* p = new Person(id, fn, ln, bday, origin, dest);
-            insert(p, p->get_last());
-            taken_ids.push_back(id);
-        }
-    }
-    std::vector<Person*> Search(std::string val) override {
-        std::vector<Person*> results;
-        searchHelper(root, val, results);
-        return results;
-    }
-    void Delete(std::string target) override {
-    }
-};
-
-class ORIBTree : public BTree {
-public:
-    ORIBTree(int degree = 3) : BTree(degree) {}
-    void Insert(int id, std::string fn, std::string ln, int bday, 
-                std::string origin, std::string dest) override {
-        bool unique = true;
-        for (auto i : taken_ids) {
-            if (i == id) {
-                unique = false;
-                break;
-            }
-        }
-        if (unique) {
-            Person* p = new Person(id, fn, ln, bday, origin, dest);
-            insert(p, p->get_origin());
-            taken_ids.push_back(id);
-        }
-    }
-    std::vector<Person*> Search(std::string val) override {
-        std::vector<Person*> results;
-        searchHelper(root, val, results);
-        return results;
-    }
-    void Delete(std::string target) override {
-    }
-};
-
-class DESBTree : public BTree {
-public:
-    DESBTree(int degree = 3) : BTree(degree) {}
-    void Insert(int id, std::string fn, std::string ln, int bday, 
-                std::string origin, std::string dest) override {
-        bool unique = true;
-        for (auto i : taken_ids) {
-            if (i == id) {
-                unique = false;
-                break;
-            }
-        }
-        if (unique) {
-            Person* p = new Person(id, fn, ln, bday, origin, dest);
-            insert(p, p->get_destination());
-            taken_ids.push_back(id);
-        }
-    }
-    std::vector<Person*> Search(std::string val) override {
-        std::vector<Person*> results;
-        searchHelper(root, val, results);
-        return results;
-    }
-    void Delete(std::string target) override {
-    }
-};
+#include "idtree.h"
+#include "fntree.h"
+#include "lntree.h"
+#include "oritree.h"
+#include "destree.h"
 
 BForest::BForest() {
-    id = new IDBTree();
-    fn = new FNBTree();
-    ln = new LNBTree();
+    id = new IDTree();
+    fn = new FNTree();
+    ln = new LNTree();
     bd = new BDTree();
-    ori = new ORIBTree();
-    des = new DESBTree();
+    ori = new ORITree();
+    des = new DESTree();
 }
 
 BForest::~BForest() {

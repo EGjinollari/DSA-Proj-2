@@ -4,23 +4,22 @@
 #include <vector>
 #include <string>
 #include "person.h"
-#include "btree.h"
 
 class BDTree;
-class IDBTree;
-class FNBTree;
-class LNBTree;
-class ORIBTree;
-class DESBTree;
+class IDTree;
+class FNTree;
+class LNTree;
+class ORITree;
+class DESTree;
 
 class BForest {
 private:
-    IDBTree* id;
-    FNBTree* fn;
-    LNBTree* ln;
+    IDTree* id;
+    FNTree* fn;
+    LNTree* ln;
     BDTree* bd;
-    ORIBTree* ori;
-    DESBTree* des;
+    ORITree* ori;
+    DESTree* des;
 
 public:
     BForest();

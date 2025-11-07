@@ -25,8 +25,6 @@ std::vector<Person*> BDTree::Search(std::string val) {
 }
 
 void BDTree::Delete(std::string target) {
-    deleteHelper(root, target);
-    
     for (auto it = taken_ids.begin(); it != taken_ids.end(); ) {
         if (std::to_string(*it) == target) {
             it = taken_ids.erase(it);
@@ -34,7 +32,4 @@ void BDTree::Delete(std::string target) {
             ++it;
         }
     }
-}
-
-void BDTree::deleteHelper(BNode* node, const std::string& target) {
 }
