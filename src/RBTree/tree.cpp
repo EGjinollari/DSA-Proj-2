@@ -164,25 +164,6 @@ void RBTree::InsertBalance(Node* node){
 
 }
 
-void RBTree::Insert(int id, std::string fn, std::string ln, int bday, std::string origin, std::string dest){
-    bool unique = true;
-    if( taken_ids.count(id)){
-        return;
-    }
-
-    if (unique){
-        Person* p = new Person(id, fn, ln, bday, origin, dest);
-        Node* new_node = nullptr;
-        root = Insert_Helper(root, p, std::to_string(id), new_node);
-        if (new_node) {
-            InsertBalance(new_node);
-            taken_ids.insert(id);
-            
-        }
-        
-    }
-
-}
 
 void RBTree::Delete(Node* root, std::string target){
     Node* node = nullptr;

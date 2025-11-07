@@ -13,10 +13,27 @@ void DESRBTree::Search_Helper(Node* root, std::vector<Person*> &vec, std::string
     Search_Helper(root->right, vec, val);
 }
 
+void DESRBTree::Insert(int id, std::string fn, std::string ln, int bday, std::string origin, std::string dest){
+    {
+        if (taken_ids.count(id)) {
+        return;
+        }
+
+        Person* p = new Person(id, fn, ln, bday, origin, dest);
+        Node* new_node = nullptr;
+        root = Insert_Helper(root, p, dest, new_node);
+        if (new_node) {
+            InsertBalance(new_node);
+            taken_ids.insert(id);
+            
+        }
+
+    }
+}
+
 Node* DESRBTree::Insert_Helper(Node* root, Person* p, std::string val, Node*& newNode){
     if (!root){
         Node* n = new Node(p);
-        n->flip_color();
         newNode = n;
         return n;
     }

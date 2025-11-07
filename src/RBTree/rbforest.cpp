@@ -26,6 +26,7 @@ RBForest::RBForest(){
 }
 
 void RBForest::Insert(int id, std::string fn, std::string ln, int bday, std::string origin, std::string dest){
+
     this->id->Insert(id, fn, ln, bday, origin, dest);
     this->fn->Insert(id, fn, ln, bday, origin, dest);
     this->ln->Insert(id, fn, ln, bday, origin, dest);
