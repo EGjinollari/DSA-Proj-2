@@ -1,7 +1,7 @@
 #ifndef FNTREE_H
 #define FNTREE_H
 
-#include "btree.h"
+#include "../btree.h"
 #include <vector>
 
 class FNTree : public BTree {

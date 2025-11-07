@@ -2,6 +2,7 @@
 #define BTREE_H
 
 #include <vector>
+#include <unordered_set>
 #include <string>
 #include "bnode.h"
 
@@ -9,7 +10,7 @@ class BTree {
 protected:
     BNode* root;
     int degree;
-    std::vector<int> taken_ids;
+    std::unordered_set<int> taken_ids;
 
 public:
     BTree(int degree);

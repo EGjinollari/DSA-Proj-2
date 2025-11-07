@@ -14,7 +14,7 @@ void ORITree::Insert(int id, std::string fn, std::string ln, int bday,
     if (unique) {
         Person* p = new Person(id, fn, ln, bday, origin, dest);
         insert(p, p->get_origin());
-        taken_ids.push_back(id);
+        taken_ids.insert(id);
     }
 }
 

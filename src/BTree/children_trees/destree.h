@@ -1,7 +1,7 @@
 #ifndef DESTREE_H
 #define DESTREE_H
 
-#include "btree.h"
+#include "../btree.h"
 #include <vector>
 
 class DESTree : public BTree {

@@ -1,4 +1,5 @@
 #include "RBTree/rbforest.h"
+#include "BTree/bforest.h"
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -9,6 +10,8 @@
 using namespace std;
 
 int main() {
+
+    BForest b_tree;
 
     RBForest rb_immigrant_data;
     ifstream file("src/immigrants.csv");

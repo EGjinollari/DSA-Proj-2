@@ -1,10 +1,10 @@
 #include "bforest.h"
-#include "bdtree.h"
-#include "idtree.h"
-#include "fntree.h"
-#include "lntree.h"
-#include "oritree.h"
-#include "destree.h"
+#include "children_trees/bdtree.h"
+#include "children_trees/idtree.h"
+#include "children_trees/fntree.h"
+#include "children_trees/lntree.h"
+#include "children_trees/oritree.h"
+#include "children_trees/destree.h"
 
 BForest::BForest() {
     id = new IDTree();

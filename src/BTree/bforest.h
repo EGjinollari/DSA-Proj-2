@@ -3,7 +3,7 @@
 
 #include <vector>
 #include <string>
-#include "person.h"
+#include "../person.h"
 
 class BDTree;
 class IDTree;

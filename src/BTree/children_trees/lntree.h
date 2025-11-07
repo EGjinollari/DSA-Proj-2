@@ -1,12 +1,12 @@
-#ifndef ORITREE_H
-#define ORITREE_H
+#ifndef LNTREE_H
+#define LNTREE_H
 
-#include "btree.h"
+#include "../btree.h"
 #include <vector>
 
-class ORITree : public BTree {
+class LNTree : public BTree {
 public:
-    ORITree(int degree = 3) : BTree(degree) {}
+    LNTree(int degree = 3) : BTree(degree) {}
     
     void Insert(int id, std::string fn, std::string ln, int bday, 
                 std::string origin, std::string dest) override;

@@ -14,7 +14,7 @@ void IDTree::Insert(int id, std::string fn, std::string ln, int bday,
     if (unique) {
         Person* p = new Person(id, fn, ln, bday, origin, dest);
         insert(p, p->get_id());
-        taken_ids.push_back(id);
+        taken_ids.insert(id);
     }
 }
 
