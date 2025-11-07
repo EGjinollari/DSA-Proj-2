@@ -1,6 +1,5 @@
 #include "bdtree.h"
 
-
 BDRBTree::BDRBTree() : RBTree(nullptr){}
 
 void BDRBTree::Search_Helper(Node* root, std::vector<Person*> &vec, std::string val){
@@ -32,7 +31,7 @@ Node* BDRBTree::Insert_Helper(Node* root, Person* p, std::string val){
     return root;
 }
 
-Node* RBTree::Delete_Helper(Node* root, std::string target, Node*& successor, bool& color) {
+Node* BDRBTree::Delete_Helper(Node* root, std::string target, Node*& successor, bool& color) {
     if (!root) {
         return nullptr;
     }

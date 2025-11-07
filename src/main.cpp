@@ -1,40 +1,43 @@
-#include "rbforest.h"
+#include "RBTree/rbforest.h"
 #include <iostream>
 #include <fstream>
 #include <sstream>
 #include <string>
 #include <algorithm>
 #include <vector>
+
 using namespace std;
 
 int main() {
+
     RBForest rb_immigrant_data;
-    ifstream file("immigrants.csv");
+    ifstream file("src/immigrants.csv");
     if (!file.is_open()) {
         cerr << "Error: Could not open file.\n";
         return 1;
     }
-
+    
     string ln;
     getline(file, ln);
     int id = 1;
-
+    
     while (getline(file, ln)) {
+        cout << ln << endl;
         stringstream ss(ln);
         string given_name, family_name, gender, birth_date, origin_country, dest_country, rest;
 
         getline(ss, given_name, ',');
         getline(ss, family_name, ',');
-        getline(ss, gender, ',');
         getline(ss, birth_date, ',');
         getline(ss, origin_country, ',');
         getline(ss, dest_country, ',');
-        getline(ss, rest);
 
-        string bday_num = birth_date;
-        bday_num.erase(remove(bday_num.begin(), bday_num.end(), '-'), bday_num.end());
-        int bday = stoi(bday_num);
-
+        string bday_num;
+        for (char c : birth_date) {
+            if (isdigit(c)) bday_num += c;
+        }
+        int bday = 0;
+        bday = stoi(bday_num);
         rb_immigrant_data.Insert(id, given_name, family_name, bday, origin_country, dest_country);
         id++;
     }

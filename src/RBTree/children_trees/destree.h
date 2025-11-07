@@ -1,10 +1,9 @@
 #pragma once
-#include <vector>
-#include "tree.h"
+#include "../tree.h"
 
-class IDRBTree: public RBTree {
+class DESRBTree: public RBTree {
     public:
-    IDRBTree();
+    DESRBTree();
     void Search_Helper(Node* root, std::vector<Person*> &vec, std::string val) override;
     Node* Insert_Helper(Node* root, Person* p, std::string val) override;
     Node* Delete_Helper(Node* root, std::string target, Node*& successor, bool& color) override;

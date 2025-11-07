@@ -1,6 +1,5 @@
 #include "tree.h"
 #include "node.h"
-
 Node* RBTree::get_root(){
     return this->root;
 }
@@ -176,7 +175,8 @@ void RBTree::Insert(int id, std::string fn, std::string ln, int bday, std::strin
 
     if (unique){
         Person* p = new Person(id, fn, ln, bday, origin, dest);
-        InsertBalance(Insert_Helper(root, p, std::to_string(id)));
+        root = Insert_Helper(root, p, std::to_string(id));
+        InsertBalance(root);
         taken_ids.push_back(id);
     }
 

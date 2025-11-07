@@ -6,7 +6,6 @@
 #include "idtree.h"
 #include "oritree.h"
 #include "destree.h"
-
 RBForest::~RBForest(){
     delete id;
     delete fn;
@@ -63,4 +62,6 @@ std::vector<Person*> RBForest::Search(std::string category, std::string val){
     if (category == "destination"){
         return des->Search(val);
     }
+    std::vector<Person*> vec;
+    return vec;
 }

@@ -1,6 +1,5 @@
-#include "tree.h"
 #pragma once
-
+#include "../tree.h"
 
 class ORIRBTree: public RBTree {
     public:

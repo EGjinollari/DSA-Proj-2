@@ -2,10 +2,10 @@
 #include "person.h"
 
 Person::Person(int id, std::string fn, std::string ln, int bday, std::string o, std::string d){
-    this->id = id;
+    this->id = std::to_string(id);
     first_name = fn;
     last_name = ln;
-    birthday = bday;
+    birthday = std::to_string(bday);
     origin = o;
     destination = d;
 }

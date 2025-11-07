@@ -1,7 +1,7 @@
 #pragma once
 
 #include <string>
-#include "person.h"
+#include "../person.h"
 
 struct Node{
 

@@ -1,6 +1,6 @@
 #include <vector>
 #include "tree.h"
-#include "person.h"
+#include "../person.h"
 
 class RBForest{
     private:
