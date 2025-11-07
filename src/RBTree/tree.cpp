@@ -166,18 +166,20 @@ void RBTree::InsertBalance(Node* node){
 
 void RBTree::Insert(int id, std::string fn, std::string ln, int bday, std::string origin, std::string dest){
     bool unique = true;
-    for (auto i: taken_ids){
-        if (i == id){
-            unique = false;
-            break;
-        }
+    if( taken_ids.count(id)){
+        return;
     }
 
     if (unique){
         Person* p = new Person(id, fn, ln, bday, origin, dest);
-        root = Insert_Helper(root, p, std::to_string(id));
-        InsertBalance(root);
-        taken_ids.push_back(id);
+        Node* new_node = nullptr;
+        root = Insert_Helper(root, p, std::to_string(id), new_node);
+        if (new_node) {
+            InsertBalance(new_node);
+            taken_ids.insert(id);
+            
+        }
+        
     }
 
 }
@@ -233,5 +235,4 @@ void RBTree::RRotate(Node* root){
     }
     left->right = root;
     root->parent = left;
-
 }

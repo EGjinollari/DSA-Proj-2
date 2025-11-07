@@ -13,18 +13,19 @@ void LNRBTree::Search_Helper(Node* root, std::vector<Person*> &vec, std::string 
     Search_Helper(root->right, vec, val);
 }
 
-Node* LNRBTree::Insert_Helper(Node* root, Person* p, std::string val){
+Node* LNRBTree::Insert_Helper(Node* root, Person* p, std::string val, Node*& newNode){
     if (!root){
         Node* n = new Node(p);
         n->flip_color();
+        newNode = n;
         return n;
     }
     if (root->get_data()->get_last() < val){
-        Node* rChild = Insert_Helper(root->right, p, val);
+        Node* rChild = Insert_Helper(root->right, p, val, newNode);
         root->right = rChild;
         rChild->parent = root;
     }else{  
-        Node* lChild = Insert_Helper(root->left, p, val);
+        Node* lChild = Insert_Helper(root->left, p, val, newNode);
         root->left = lChild;
         lChild->parent = root;
     } 
