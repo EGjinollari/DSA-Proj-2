@@ -12,7 +12,6 @@ class Person{
     std::string origin;
     std::string destination;
 
-
     public:
     Person(int id, std::string fn, std::string ln, int bday, std::string o, std::string d);
     
