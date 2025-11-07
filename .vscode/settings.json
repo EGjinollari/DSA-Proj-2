@@ -61,6 +61,7 @@
         "numeric": "cpp",
         "random": "cpp",
         "fstream": "cpp",
-        "sstream": "cpp"
+        "sstream": "cpp",
+        "unordered_set": "cpp"
     }
 }
