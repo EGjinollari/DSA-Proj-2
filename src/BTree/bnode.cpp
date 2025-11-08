@@ -1,8 +1,10 @@
 #include "bnode.h"
 #include <iostream>
 
-BNode::BNode(int degree, bool leaf) {
-    this->degree = degree;
+using namespace std;
+
+BNode::BNode(int deg, bool leaf) {
+    this->deg = deg;
     this->leaf = leaf;
 }
 
@@ -12,7 +14,7 @@ BNode::~BNode() {
     }
 }
 
-BNode* BNode::search(const std::string& key) {
+BNode* BNode::search(const string& key) {
     int i = 0;
     while (i < keys.size() && key > keys[i]) {
         i++;
@@ -29,57 +31,93 @@ BNode* BNode::search(const std::string& key) {
     return children[i]->search(key);
 }
 
-void BNode::insertNonFull(Person* person, const std::string& key) {
+void BNode::insertNonFull(Person* person, const string& key) {
     int i = keys.size() - 1;
     
     if (leaf) {
         keys.push_back("");
         persons.push_back(nullptr);
         
-        while (i >= 0 && keys[i] > key) {
-            keys[i + 1] = keys[i];
-            persons[i + 1] = persons[i];
-            i--;
-        }
-        
-        keys[i + 1] = key;
-        persons[i + 1] = person;
-    } else {
-        while (i >= 0 && keys[i] > key) {
-            i--;
-        }
-        
-        if (children[i + 1]->keys.size() == 2 * degree - 1) {
-            splitChild(i + 1, children[i + 1]);
-            if (keys[i + 1] < key) {
-                i++;
+        for (int j = keys.size() - 2; j >= 0; j--) {
+            if (keys[j] > key) {
+                keys[j + 1] = keys[j];
+                persons[j + 1] = persons[j];
+            } else {
+                break;
             }
         }
-        children[i + 1]->insertNonFull(person, key);
+        
+        for (int j = 0; j < keys.size(); j++) {
+            if (keys[j] == "" || keys[j] > key) {
+                keys[j] = key;
+                persons[j] = person;
+                break;
+            }
+        }
+    } else {
+        int pos = 0;
+        while (pos < keys.size() && keys[pos] < key) {
+            pos++;
+        }
+        
+        if (children[pos]->keys.size() == 2 * deg - 1) {
+            splitChild(pos, children[pos]);
+            if (keys[pos] < key) {
+                pos++;
+            }
+        }
+        children[pos]->insertNonFull(person, key);
     }
 }
 
 void BNode::splitChild(int i, BNode* y) {
-    BNode* z = new BNode(y->degree, y->leaf);
+    BNode* z = new BNode(y->deg, y->leaf);
     
-    for (int j = 0; j < degree - 1; j++) {
-        z->keys.push_back(y->keys[j + degree]);
-        z->persons.push_back(y->persons[j + degree]);
+    for (int j = 0; j < deg - 1; j++) {
+        z->keys.push_back(y->keys[deg + j]);
+        z->persons.push_back(y->persons[deg + j]);
     }
     
     if (!y->leaf) {
-        for (int j = 0; j < degree; j++) {
-            z->children.push_back(y->children[j + degree]);
+        for (int j = 0; j < deg; j++) {
+            z->children.push_back(y->children[deg + j]);
         }
     }
     
-    y->keys.resize(degree - 1);
-    y->persons.resize(degree - 1);
+    int new_size = deg - 1;
+    y->keys.resize(new_size);
+    y->persons.resize(new_size);
     if (!y->leaf) {
-        y->children.resize(degree);
+        y->children.resize(deg);
     }
     
-    children.insert(children.begin() + i + 1, z);
-    keys.insert(keys.begin() + i, y->keys[degree - 1]);
-    persons.insert(persons.begin() + i, y->persons[degree - 1]);
+    vector<BNode*> new_children;
+    for (int j = 0; j <= i; j++) {
+        new_children.push_back(children[j]);
+    }
+    new_children.push_back(z);
+    for (int j = i + 1; j < children.size(); j++) {
+        new_children.push_back(children[j]);
+    }
+    children = new_children;
+    
+    vector<string> new_keys;
+    for (int j = 0; j < i; j++) {
+        new_keys.push_back(keys[j]);
+    }
+    new_keys.push_back(y->keys[deg - 1]);
+    for (int j = i; j < keys.size(); j++) {
+        new_keys.push_back(keys[j]);
+    }
+    keys = new_keys;
+    
+    vector<Person*> new_persons;
+    for (int j = 0; j < i; j++) {
+        new_persons.push_back(persons[j]);
+    }
+    new_persons.push_back(y->persons[deg - 1]);
+    for (int j = i; j < persons.size(); j++) {
+        new_persons.push_back(persons[j]);
+    }
+    persons = new_persons;
 }

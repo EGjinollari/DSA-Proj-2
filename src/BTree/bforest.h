@@ -1,34 +1,27 @@
-#ifndef BFOREST_H
-#define BFOREST_H
+#pragma once
 
 #include <vector>
 #include <string>
 #include "../person.h"
+#include "btree.h"
 
-class BDTree;
-class IDTree;
-class FNTree;
-class LNTree;
-class ORITree;
-class DESTree;
+using namespace std;
 
 class BForest {
 private:
-    IDTree* id;
-    FNTree* fn;
-    LNTree* ln;
-    BDTree* bd;
-    ORITree* ori;
-    DESTree* des;
+    BTree* id;
+    BTree* fn;
+    BTree* ln;
+    BTree* bd;
+    BTree* ori;
+    BTree* des;
 
 public:
     BForest();
     ~BForest();
     
-    void Insert(int id, std::string fn, std::string ln, int bday, 
-                std::string origin, std::string dest);
-    void Delete(std::string id);
-    std::vector<Person*> Search(std::string category, std::string val);
+    void Insert(int id, string fn, string ln, int bday, 
+                string origin, string dest);
+    void Delete(string id);
+    vector<Person*> Search(string category, string val);
 };
-
-#endif

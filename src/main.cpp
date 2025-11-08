@@ -7,15 +7,15 @@
 #include <algorithm>
 #include <vector>
 #include <chrono>
-#include <windows.h>
+#include <thread> // for sleep_for
 
 using namespace std;
 
 int main() {
 
     BForest b_immigrant_data;
-
     RBForest rb_immigrant_data;
+
     ifstream file("src/immigrants.csv");
     if (!file.is_open()) {
         cerr << "Error: Could not open file.\n";
@@ -43,18 +43,20 @@ int main() {
         for (char c : birth_date) {
             if (isdigit(c)) bday_num += c;
         }
-        int bday = 0;
-        bday = stoi(bday_num);
+        int bday = stoi(bday_num);
         rb_immigrant_data.Insert(id, given_name, family_name, bday, origin_country, dest_country);
         id++;
     }
+
     auto duration = std::chrono::high_resolution_clock::now() - start_time;
     file.close();
-    cout << "Inserted " << (id - 1) << " records into the RB tree.\n\n";
-    cout << "This took: " << duration.count() / 1000000000.0 << " seconds"<< endl << "On average a Red Black Tree insertion took: " <<
-    duration.count() / (id - 1) / 1000000000.0 << " seconds" << endl;
 
-    Sleep(5000);
+    cout << "Inserted " << (id - 1) << " records into the RB tree.\n\n";
+    cout << "This took: " << duration.count() / 1e9 << " seconds" << endl
+         << "On average a Red Black Tree insertion took: "
+         << duration.count() / (id - 1) / 1e9 << " seconds" << endl;
+
+    std::this_thread::sleep_for(std::chrono::seconds(5)); // portable pause
 
     file.open("src/immigrants.csv"); 
     if (!file.is_open()) {
@@ -82,28 +84,30 @@ int main() {
         for (char c : birth_date) {
             if (isdigit(c)) bday_num += c;
         }
-        int bday = 0;
-        bday = stoi(bday_num);
+        int bday = stoi(bday_num);
         b_immigrant_data.Insert(id, given_name, family_name, bday, origin_country, dest_country);
         id++;
     }
+
     duration = std::chrono::high_resolution_clock::now() - start_time;
     file.close();
-    cout << "Inserted " << (id - 1) << " records into the B-tree.\n\n";
-    cout << "This took: " << duration.count() / 1000000000.0 << " seconds"<< endl << "On average a B-Tree insertion took: " <<
-    duration.count() / (id - 1) / 1000000000.0 << " seconds" << endl;
-    
-    id --;
 
+    cout << "Inserted " << (id - 1) << " records into the B-tree.\n\n";
+    cout << "This took: " << duration.count() / 1e9 << " seconds" << endl
+         << "On average a B-Tree insertion took: "
+         << duration.count() / (id - 1) / 1e9 << " seconds" << endl;
+    
+    id--;
 
     while (true) {       
         cout << "Enter an action (or 'exit' to quit): " << endl;
-        
         cout << "Choose an action: add | search | delete" << endl;
+
         string action;
         getline(cin, action);
+
         if (action == "exit") break;
-        else if (action == "add"){
+        else if (action == "add") {
             cout << "Enter given name: ";
             string given_name;
             getline(cin, given_name);
@@ -124,20 +128,19 @@ int main() {
             string dest_country;
             getline(cin, dest_country);
 
-            id ++;
+            id++;
 
             start_time = std::chrono::high_resolution_clock::now();
             rb_immigrant_data.Insert(id, given_name, family_name, stoi(birth_date), origin_country, dest_country);
             duration = std::chrono::high_resolution_clock::now() - start_time;
-            cout << "This took: " << duration.count() / 1000000000.0 << " seconds for the RBtree" << endl;
+            cout << "This took: " << duration.count() / 1e9 << " seconds for the RBtree" << endl;
 
             start_time = std::chrono::high_resolution_clock::now();
             b_immigrant_data.Insert(id, given_name, family_name, stoi(birth_date), origin_country, dest_country);
             duration = std::chrono::high_resolution_clock::now() - start_time;
-            cout << "This took: " << duration.count() / 1000000000.0 << " seconds for the Btree" << endl;
+            cout << "This took: " << duration.count() / 1e9 << " seconds for the Btree" << endl;
 
-        }
-        else if (action == "search"){
+        } else if (action == "search") {
             cout << "Search categories: id | first | last | birthday | origin | destination\n";
             string category;
             getline(cin, category);
@@ -148,18 +151,15 @@ int main() {
 
             cout << "Select data structure: rbtree | btree" << endl;
             string data_structure;
-
             getline(cin, data_structure);
 
             start_time = std::chrono::high_resolution_clock::now();
             vector<Person*> results;
-            if (data_structure == "rbtree"){
+            if (data_structure == "rbtree")
                 results = rb_immigrant_data.Search(category, value);
-            }
-
-            else{
+            else
                 results = b_immigrant_data.Search(category, value);
-            }
+
             duration = std::chrono::high_resolution_clock::now() - start_time;
 
             if (results.empty()) {
@@ -168,19 +168,21 @@ int main() {
                 cout << "\n--- Search Results ---\n";
                 for (auto p : results) {
                     cout << "ID: " << p->get_id()
-                        << " | Name: " << p->get_first() << " " << p->get_last()
-                        << " | Birthday: " << p->get_birthday()
-                        << " | Origin: " << p->get_origin()
-                        << " | Destination: " << p->get_destination()
-                        << "\n";
+                         << " | Name: " << p->get_first() << " " << p->get_last()
+                         << " | Birthday: " << p->get_birthday()
+                         << " | Origin: " << p->get_origin()
+                         << " | Destination: " << p->get_destination()
+                         << "\n";
                 }
                 cout << endl;
             }
-            cout << "Searching by people with the " << category << ' ' << value << " resulted in " << results.size() << " matches and took: " <<  
-            duration.count() / 1000000000.0 << " seconds"<< endl <<"On average a "<< data_structure  << " search took: " 
-            << duration.count() / (id - 1) / 1000000000.0 << " seconds" << endl;
-        }
-        else if (action == "delete"){
+            cout << "Searching by persons with the " << category << ' ' << value 
+                 << " resulted in " << results.size() << " matches and took: " 
+                 << duration.count() / 1e9 << " seconds" << endl
+                 << "On average a " << data_structure  << " search took: " 
+                 << duration.count() / (id - 1) / 1e9 << " seconds" << endl;
+
+        } else if (action == "delete") {
             cout << "Delete categories: id | first | last | birthday | origin | destination\n";
             string category;
             getline(cin, category);
@@ -191,52 +193,45 @@ int main() {
 
             cout << "Select data structure: rbtree | btree" << endl;
             string data_structure;
-
             getline(cin, data_structure);
 
             vector<Person*> results;
 
-            
-
-            if (data_structure == "rbtree"){
+            if (data_structure == "rbtree") {
                 results = rb_immigrant_data.Search(category, value);
-                 start_time = std::chrono::high_resolution_clock::now();
-                for (auto i: results){
+                start_time = std::chrono::high_resolution_clock::now();
+                for (auto i : results)
                     rb_immigrant_data.Delete(i->get_id());
-                }
-            }
-            else{
+            } else {
                 results = b_immigrant_data.Search(category, value);
                 start_time = std::chrono::high_resolution_clock::now();
-                for (auto i: results){
+                for (auto i : results)
                     b_immigrant_data.Delete(i->get_id());
-                }
             }
             
             duration = std::chrono::high_resolution_clock::now() - start_time;
 
-             if (results.empty()) {
+            if (results.empty()) {
                 cout << "No matches found.\n\n";
             } else {
-                cout << "\n--- Search Results ---\n";
+                cout << "\n--- Deleted Records ---\n";
                 for (auto p : results) {
                     cout << "ID: " << p->get_id()
-                        << " | Name: " << p->get_first() << " " << p->get_last()
-                        << " | Birthday: " << p->get_birthday()
-                        << " | Origin: " << p->get_origin()
-                        << " | Destination: " << p->get_destination()
-                        << "\n";
+                         << " | Name: " << p->get_first() << " " << p->get_last()
+                         << " | Birthday: " << p->get_birthday()
+                         << " | Origin: " << p->get_origin()
+                         << " | Destination: " << p->get_destination()
+                         << "\n";
                 }
                 cout << endl;
             }
-            cout << "Deleting by people with the " << category << ' ' << value << " resulted in " << results.size() << " deletions and took: " <<  
-            duration.count() / 1000000000.0 << " seconds"<< endl << "On average a "<< data_structure  << " deletion took: " 
-            << duration.count() / (id - 1) / 1000000000.0 << " seconds" << endl;
-
+            cout << "Deleting by persons with the " << category << ' ' << value 
+                 << " resulted in " << results.size() << " deletions and took: " 
+                 << duration.count() / 1e9 << " seconds" << endl 
+                 << "On average a " << data_structure  << " deletion took: " 
+                 << duration.count() / (id - 1) / 1e9 << " seconds" << endl;
         }
     }
-
-        
 
     cout << "Goodbye!\n";
     return 0;

@@ -71,7 +71,12 @@
         "ratio": "cpp",
         "stop_token": "cpp",
         "thread": "cpp",
-        "xhash": "cpp"
+        "xhash": "cpp",
+        "string_view": "cpp",
+        "numbers": "cpp",
+        "semaphore": "cpp",
+        "span": "cpp",
+        "variant": "cpp"
     },
     "C_Cpp.errorSquiggles": "enabled"
 }

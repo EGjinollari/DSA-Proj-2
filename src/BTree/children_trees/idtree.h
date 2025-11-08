@@ -1,19 +1,16 @@
-#ifndef IDTREE_H
-#define IDTREE_H
+#pragma once
 
 #include "../btree.h"
 #include <vector>
+
+using namespace std;
 
 class IDTree : public BTree {
 public:
     IDTree(int degree = 10) : BTree(degree) {}
     
-    void Insert(int id, std::string fn, std::string ln, int bday, 
-                std::string origin, std::string dest) override;
+    void Insert(int id, string fn, string ln, int bday, string origin, string dest) override;
     
-    std::vector<Person*> Search(std::string val) override;
-    
+    vector<Person*> Search(string val) override;
 
 };
-
-#endif

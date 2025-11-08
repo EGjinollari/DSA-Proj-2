@@ -1,20 +1,20 @@
 #include "destree.h"
 #include <vector>
 
-void DESTree::Insert(int id, std::string fn, std::string ln, int bday, 
-                     std::string origin, std::string dest) {
-    if (taken_ids.find(id) == taken_ids.end()){
+using namespace std;
+
+void DESTree::Insert(int id, string fn, string ln, int bday, string origin, string dest) {
+    if (taken_ids.count(id) > 0) {
         return;
+    }
 
     Person* p = new Person(id, fn, ln, bday, origin, dest);
-        insert(p, p->get_birthday());
-        taken_ids.insert(id);
-    }
+    insert(p, p->get_destination());
+    taken_ids.insert(id);
 }
 
-std::vector<Person*> DESTree::Search(std::string val) {
-    std::vector<Person*> results;
+vector<Person*> DESTree::Search(string val) {
+    vector<Person*> results;
     searchHelper(root, val, results);
     return results;
 }
-
