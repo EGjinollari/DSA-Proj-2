@@ -35,12 +35,14 @@ void BForest::Insert(int id, std::string fn, std::string ln, int bday,
 }
 
 void BForest::Delete(std::string id) {
-    this->id->Delete(id);
-    this->fn->Delete(id);
-    this->ln->Delete(id);
-    this->bd->Delete(id);
-    this->ori->Delete(id);
-    this->des->Delete(id);
+
+    auto target = this->id->Search(id);
+    this->id->Delete(target[0]->get_id());
+    this->fn->Delete(target[0]->get_first());
+    this->ln->Delete(target[0]->get_last());
+    this->bd->Delete(target[0]->get_birthday());
+    this->ori->Delete(target[0]->get_origin());
+    this->des->Delete(target[0]->get_destination());
 }
 
 std::vector<Person*> BForest::Search(std::string category, std::string val) {

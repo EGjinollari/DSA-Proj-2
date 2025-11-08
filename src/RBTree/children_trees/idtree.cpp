@@ -58,6 +58,7 @@ Node* IDRBTree::Delete_Helper(Node* root, std::string target, Node*& successor, 
     else if (target > curr)
         root->right = Delete_Helper(root->right, target, successor, color);
     else {
+        taken_ids.erase(std::stoi(root->get_data()->get_id()));
         color = root->color;
         if (!root->left && !root->right) {
             delete root;

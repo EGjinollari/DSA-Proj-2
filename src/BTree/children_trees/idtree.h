@@ -6,13 +6,14 @@
 
 class IDTree : public BTree {
 public:
-    IDTree(int degree = 3) : BTree(degree) {}
+    IDTree(int degree = 10) : BTree(degree) {}
     
     void Insert(int id, std::string fn, std::string ln, int bday, 
                 std::string origin, std::string dest) override;
     
     std::vector<Person*> Search(std::string val) override;
-    void Delete(std::string target) override;
+    
+
 };
 
 #endif

@@ -4,12 +4,10 @@
 void FNTree::Insert(int id, std::string fn, std::string ln, int bday, 
                      std::string origin, std::string dest) {
     bool unique = true;
-    for (auto i : taken_ids) {
-        if (i == id) {
-            unique = false;
-            break;
-        }
+    if (taken_ids.find(id) == taken_ids.end()){
+        unique = false;
     }
+
 
     if (unique) {
         Person* p = new Person(id, fn, ln, bday, origin, dest);
@@ -24,12 +22,3 @@ std::vector<Person*> FNTree::Search(std::string val) {
     return results;
 }
 
-void FNTree::Delete(std::string target) {
-    for (auto it = taken_ids.begin(); it != taken_ids.end(); ) {
-        if (std::to_string(*it) == target) {
-            it = taken_ids.erase(it);
-        } else {
-            ++it;
-        }
-    }
-}
