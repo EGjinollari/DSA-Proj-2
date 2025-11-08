@@ -3,15 +3,11 @@
 
 void LNTree::Insert(int id, std::string fn, std::string ln, int bday, 
                      std::string origin, std::string dest) {
-    bool unique = true;
     if (taken_ids.find(id) == taken_ids.end()){
-        unique = false;
-    }
+        return;
 
-
-    if (unique) {
-        Person* p = new Person(id, fn, ln, bday, origin, dest);
-        insert(p, p->get_last());
+    Person* p = new Person(id, fn, ln, bday, origin, dest);
+        insert(p, p->get_birthday());
         taken_ids.insert(id);
     }
 }
