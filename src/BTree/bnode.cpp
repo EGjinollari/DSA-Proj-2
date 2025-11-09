@@ -2,7 +2,7 @@
 #include <iostream>
 
 using namespace std;
-
+// Constructor / Destructor
 BNode::BNode(int deg, bool leaf) {
     this->deg = deg;
     this->leaf = leaf;
@@ -14,6 +14,7 @@ BNode::~BNode() {
     }
 }
 
+// Search for a node
 BNode* BNode::search(const string& key) {
     int i = 0;
     while (i < keys.size() && key > keys[i]) {
@@ -31,6 +32,7 @@ BNode* BNode::search(const string& key) {
     return children[i]->search(key);
 }
 
+// Insert into a nonfull node
 void BNode::insertNonFull(Person* person, const string& key) {
     int i = keys.size() - 1;
     
@@ -70,6 +72,7 @@ void BNode::insertNonFull(Person* person, const string& key) {
     }
 }
 
+// Split a node into and move index i to the parent node
 void BNode::splitChild(int i, BNode* y) {
     BNode* z = new BNode(y->deg, y->leaf);
     

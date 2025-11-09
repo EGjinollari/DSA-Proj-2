@@ -2,16 +2,16 @@
 #include <iostream>
 
 using namespace std;
-
+// Constructor
 BTree::BTree(int deg) {
     this->deg = deg;
     root = nullptr;
 }
-
+// Destructor (wraps destructhelper)
 BTree::~BTree() {
     destructHelper(root);
 }
-
+// Recursively deletes nodes
 void BTree::destructHelper(BNode* node) {
     if (!node) {
         return;
@@ -24,6 +24,7 @@ void BTree::destructHelper(BNode* node) {
     delete node;
 }
 
+// Recursively searches for matching nodes and returns
 void BTree::searchHelper(BNode* node, const string& target, vector<Person*>& results) {
     if (!node) {
         return;
@@ -46,6 +47,7 @@ void BTree::searchHelper(BNode* node, const string& target, vector<Person*>& res
     }
 }
 
+// Insert a new node and call the rebalancing functions if necessary
 void BTree::insert(Person* person, const string& key) {
     if (!root) {
         root = new BNode(deg, true);
@@ -69,15 +71,16 @@ void BTree::insert(Person* person, const string& key) {
         } else {
             root->insertNonFull(person, key);
         }
-    }
+    }   
 }
 
+// Delete a leaf node
 void BTree::removeFromLeaf(BNode* node, int index){
     delete node->getPerson(index);
     node->removeKey(index);
     node->removePerson(index);
 }
-
+// Delete a nonleaf node make sure to mantain minmimum degree
 void BTree::removeFromNonLeaf(BNode* node, int index){
     string key = node->getKey(index);
 
@@ -101,6 +104,7 @@ void BTree::removeFromNonLeaf(BNode* node, int index){
     }
 }
 
+// Return the largest key in the left subtree
 string BTree::getPredecessor(BNode* node, int index){
     BNode* curr = node->getChild(index);
     while(!curr->isLeaf()){
@@ -109,6 +113,7 @@ string BTree::getPredecessor(BNode* node, int index){
     return curr->getKey(curr->getKeyCount() - 1);
 }
 
+// Return the smallest key of the right subtree
 string BTree::getSuccessor(BNode* node, int index){
     BNode* curr = node->getChild(index + 1);
     while(!curr->isLeaf()){
@@ -117,6 +122,7 @@ string BTree::getSuccessor(BNode* node, int index){
     return curr->getKey(0);
 }
 
+// Merge two nodes together
 void BTree::merge(BNode* node, int index){
     BNode* child = node->getChild(index);
     BNode* sib = node->getChild(index + 1);
@@ -142,6 +148,7 @@ void BTree::merge(BNode* node, int index){
     delete sib;
 }
 
+// Borrow a key from the previous sibling to fill a deficient child
 void BTree::transferPrev(BNode* node, int index){
     BNode* child = node->getChild(index);
     BNode* sib = node->getChild(index - 1);
@@ -162,6 +169,7 @@ void BTree::transferPrev(BNode* node, int index){
     }
 }
 
+// Borrow a key from the next sibling to fill a deficient child
 void BTree::transferNext(BNode* node, int index){
     BNode* child = node->getChild(index);
     BNode* sib = node->getChild(index + 1);
@@ -182,6 +190,7 @@ void BTree::transferNext(BNode* node, int index){
     }
 }
 
+// Recursive helper to delete and rebalance
 void BTree::deleteHelper(BNode* node, string& key){
     int index = 0;
     while (index < node->getKeyCount() && node->getKey(index) < key){
@@ -214,6 +223,7 @@ void BTree::deleteHelper(BNode* node, string& key){
     
 }
 
+// Delete a node from the Btree
 void BTree::Delete(string target) {
     if (!root){
         return;
@@ -233,6 +243,7 @@ void BTree::Delete(string target) {
     }
 }
 
+// Make sure a child has enough keys for deletion
 void BTree::fill(BNode* node, int index){
     if (index != 0 && node->getChild(index - 1)->getKeyCount() > deg){
         transferPrev(node, index);

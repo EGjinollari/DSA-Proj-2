@@ -9,6 +9,8 @@
 #include <chrono>
 #include <windows.h>
 
+// CLI that handles insertion, deletion, and adding to both trees. Runs until user types exit
+
 using namespace std;
 
 int main() {

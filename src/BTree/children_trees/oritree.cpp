@@ -3,6 +3,7 @@
 
 using namespace std;
 
+// Insert into the origin tree
 void ORITree::Insert(int id, string fn, string ln, int bday, string origin, string dest) {
     if (taken_ids.count(id) > 0) {
         return;
@@ -13,6 +14,7 @@ void ORITree::Insert(int id, string fn, string ln, int bday, string origin, stri
     taken_ids.insert(id);
 }
 
+// Search the origin tree
 vector<Person*> ORITree::Search(string val) {
     vector<Person*> results;
     searchHelper(root, val, results);

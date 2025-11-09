@@ -4,7 +4,7 @@
 #include <vector>
 
 using namespace std;
-
+// B Tree sorted by first name
 class FNTree : public BTree {
 public:
     FNTree(int degree = 10) : BTree(degree) {}

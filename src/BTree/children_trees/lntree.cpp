@@ -2,7 +2,7 @@
 #include <vector>
 
 using namespace std;
-
+// Insert into the last name tree
 void LNTree::Insert(int id, string fn, string ln, int bday, string origin, string dest) {
     if (taken_ids.count(id) > 0) {
         return;
@@ -12,7 +12,7 @@ void LNTree::Insert(int id, string fn, string ln, int bday, string origin, strin
     insert(p, p->get_last());
     taken_ids.insert(id);
 }
-
+// Search the last name tree
 vector<Person*> LNTree::Search(string val) {
     vector<Person*> results;
     searchHelper(root, val, results);

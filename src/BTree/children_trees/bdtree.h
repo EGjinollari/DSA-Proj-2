@@ -4,7 +4,7 @@
 #include <vector>
 
 using namespace std;
-
+// B Tree sorted by birthday
 class BDTree : public BTree {
 public:
     BDTree(int degree = 10) : BTree(degree) {}

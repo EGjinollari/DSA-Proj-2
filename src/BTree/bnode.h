@@ -15,23 +15,29 @@ private:
     vector<BNode*> children;
 
 public:
+    // Constructor / destructor
     BNode(int deg, bool leaf);
     ~BNode();
+    // Search for a node
     BNode* search(const string& key);
+
+    // Helper functions for insertion / deletion
     void insertNonFull(Person* person, const string& key);
     void splitChild(int i, BNode* y);
+    // Getters
     bool isLeaf() { return leaf; }
     int getKeyCount() { return keys.size(); }
     string getKey(int index) { return keys[index]; }
     Person* getPerson(int index) { return persons[index]; }
     BNode* getChild(int index) { return children[index]; }
     int getdeg() { return deg; }
+    // Setters
     void setKey(int index, const string& key) { keys[index] = key; }
     void setPerson(int index, Person* person) { persons[index] = person; }
     void addKey(const string& key) { keys.push_back(key); }
     void addPerson(Person* person) { persons.push_back(person); }
     void addChild(BNode* child) { children.push_back(child); }
-    
+    // Insert a key into a node
     void insertKey(int index, const string& key) { 
         vector<string> new_keys;
         for (int j = 0; j < index; j++) {
@@ -43,7 +49,7 @@ public:
         }
         keys = new_keys;
     }
-    
+    // Insert a person into a node
     void insertPerson(int index, Person* person) { 
         vector<Person*> new_persons;
         for (int j = 0; j < index; j++) {
@@ -55,7 +61,7 @@ public:
         }
         persons = new_persons;
     }
-    
+    // Insert a child into a node
     void insertChild(int index, BNode* child) { 
         vector<BNode*> new_children;
         for (int j = 0; j < index; j++) {
@@ -67,7 +73,7 @@ public:
         }
         children = new_children;
     }
-    
+    // Remove a key
     void removeKey(int index) { 
         vector<string> new_keys;
         for (int j = 0; j < keys.size(); j++) {
@@ -77,7 +83,7 @@ public:
         }
         keys = new_keys;
     }
-    
+    // Remove a person
     void removePerson(int index) { 
         vector<Person*> new_persons;
         for (int j = 0; j < persons.size(); j++) {
@@ -87,7 +93,7 @@ public:
         }
         persons = new_persons;
     }
-    
+    // Remove a child
     void removeChild(int index) { 
         vector<BNode*> new_children;
         for (int j = 0; j < children.size(); j++) {
@@ -97,7 +103,7 @@ public:
         }
         children = new_children;
     }
-    
+    // Resize all 3 types of arrays
     void resizeKeys(int size) { 
         vector<string> new_keys;
         for (int j = 0; j < size && j < keys.size(); j++) {
@@ -121,12 +127,12 @@ public:
         }
         children = new_children;
     }
-    
+    // Clear the persons vector 
     void clearPersons() { 
         vector<Person*> new_persons;
         persons = new_persons;
     }
-    
+    // Pop from the vectors
     void popBackKey() { 
         if (keys.size() > 0) {
             vector<string> new_keys;

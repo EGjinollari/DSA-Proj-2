@@ -1,7 +1,7 @@
 #pragma once
 
 #include <string>
-
+// Class to store the data from the csv
 class Person{
     private:
         
@@ -15,6 +15,7 @@ class Person{
     public:
     Person(int id, std::string fn, std::string ln, int bday, std::string o, std::string d);
     
+    // Getters
     std::string get_first();
     std::string get_last();
     std::string get_birthday();

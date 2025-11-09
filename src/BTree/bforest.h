@@ -6,7 +6,7 @@
 #include "btree.h"
 
 using namespace std;
-
+// Wrapper class that inserts / deletes / searches all the child trees
 class BForest {
 private:
     BTree* id;

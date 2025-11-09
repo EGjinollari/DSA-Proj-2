@@ -7,7 +7,7 @@
 #include "children_trees/destree.h"
 
 using namespace std;
-
+// Construct all the trees
 BForest::BForest() {
     id = new IDTree();
     fn = new FNTree();
@@ -16,7 +16,7 @@ BForest::BForest() {
     ori = new ORITree();
     des = new DESTree();
 }
-
+// Delete all the trees
 BForest::~BForest() {
     delete id;
     delete fn;
@@ -26,6 +26,7 @@ BForest::~BForest() {
     delete des;
 }
 
+// Insert into all the trees
 void BForest::Insert(int id, string fn, string ln, int bday, string origin, string dest) {
     this->id->Insert(id, fn, ln, bday, origin, dest);
     this->fn->Insert(id, fn, ln, bday, origin, dest);
@@ -34,7 +35,7 @@ void BForest::Insert(int id, string fn, string ln, int bday, string origin, stri
     this->ori->Insert(id, fn, ln, bday, origin, dest);
     this->des->Insert(id, fn, ln, bday, origin, dest);
 }
-
+// Delete from all the trees
 void BForest::Delete(string id) {
     auto target = this->id->Search(id);
     this->id->Delete(target[0]->get_id());
@@ -45,6 +46,7 @@ void BForest::Delete(string id) {
     this->des->Delete(target[0]->get_destination());
 }
 
+// Search the desired tree based on category
 vector<Person*> BForest::Search(string cat, string val) {
     if (cat == "id") {
         return id->Search(val);
