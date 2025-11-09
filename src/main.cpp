@@ -7,7 +7,7 @@
 #include <algorithm>
 #include <vector>
 #include <chrono>
-#include <windows.h>
+#include <thread>
 
 // CLI that handles insertion, deletion, and adding to both trees. Runs until user types exit
 
@@ -56,7 +56,7 @@ int main() {
     cout << "This took: " << duration.count() / 1000000000.0 << " seconds"<< endl << "On average a Red Black Tree insertion took: " <<
     duration.count() / (id - 1) / 1000000000.0 << " seconds" << endl;
 
-    Sleep(5000);
+    this_thread::sleep_for(std::chrono::seconds(5));
 
     file.open("src/immigrants.csv"); 
     if (!file.is_open()) {
