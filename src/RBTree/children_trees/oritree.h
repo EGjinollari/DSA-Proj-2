@@ -1,6 +1,6 @@
 #pragma once
 #include "../tree.h"
-
+// Child tree that sorts by origin
 class ORIRBTree: public RBTree {
     public:
     ORIRBTree();

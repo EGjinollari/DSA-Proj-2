@@ -1,7 +1,7 @@
 #pragma once
 #include <vector>
 #include "../tree.h"
-
+// Child tree that sorts by birthday
 class BDRBTree: public RBTree {
     public:
     BDRBTree();

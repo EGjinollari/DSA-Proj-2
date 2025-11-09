@@ -1,6 +1,6 @@
 #pragma once
 #include "../tree.h"
-
+// Child tree that sorts by first name
 class FNRBTree: public RBTree {
     public:
     FNRBTree();

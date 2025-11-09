@@ -1,6 +1,6 @@
 #pragma once
 #include "../tree.h"
-
+// Child tree that sorts by destination
 class DESRBTree: public RBTree {
     public:
     DESRBTree();

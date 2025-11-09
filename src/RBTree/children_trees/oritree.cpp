@@ -2,6 +2,7 @@
 
 ORIRBTree::ORIRBTree() : RBTree(nullptr){}
 
+// Recurisvely search for a given origin
 void ORIRBTree::Search_Helper(Node* root, std::vector<Person*> &vec, std::string val){
     if (!root) {
         return;
@@ -14,6 +15,7 @@ void ORIRBTree::Search_Helper(Node* root, std::vector<Person*> &vec, std::string
 
 }
 
+// Insert a person by origin (wraps insert_helper)
 void ORIRBTree::Insert(Person* p){
     {
         if (taken_ids.count(stoi(p->get_id()))) {
@@ -31,7 +33,7 @@ void ORIRBTree::Insert(Person* p){
     }
 }
 
-
+// Recursively locates where to insert node and inserts
 Node* ORIRBTree::Insert_Helper(Node* root, Person* p, Node*& newNode){
     if (!root){
         Node* n = new Node(p);
@@ -50,6 +52,7 @@ Node* ORIRBTree::Insert_Helper(Node* root, Person* p, Node*& newNode){
     return root;
 }
 
+// Recurisvely find and delete from the origin tree
 Node* ORIRBTree::Delete_Helper(Node* root, Person* target, Node*& successor, bool& color) {
     if (!root){
         return nullptr;

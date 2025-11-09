@@ -2,6 +2,7 @@
 
 DESRBTree::DESRBTree() : RBTree(nullptr){}
 
+// Recurisvely search for a given destination
 void DESRBTree::Search_Helper(Node* root, std::vector<Person*> &vec, std::string val){
     if (!root) {
         return;
@@ -13,6 +14,7 @@ void DESRBTree::Search_Helper(Node* root, std::vector<Person*> &vec, std::string
     Search_Helper(root->right, vec, val);
 }
 
+// Insert a person by destination (wraps insert_helper)
 void DESRBTree::Insert(Person* p){
     {
         if (taken_ids.count(stoi(p->get_id()))) {
@@ -30,7 +32,7 @@ void DESRBTree::Insert(Person* p){
     }
 }
 
-
+// Recursively locates where to insert node and inserts
 Node* DESRBTree::Insert_Helper(Node* root, Person* p, Node*& newNode){
     if (!root){
         Node* n = new Node(p);
@@ -49,6 +51,7 @@ Node* DESRBTree::Insert_Helper(Node* root, Person* p, Node*& newNode){
     return root;
 }
 
+// Recurisvely find and delete from the destination tree
 Node* DESRBTree::Delete_Helper(Node* root, Person* target, Node*& successor, bool& color) {
     if (!root){
         return nullptr;

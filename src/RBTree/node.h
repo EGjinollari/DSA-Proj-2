@@ -11,7 +11,7 @@ struct Node{
     Node* right = nullptr;
     Node* parent = nullptr;
 
-
+    // Utility functions
     Node(Person* p);
     bool get_color();
     void flip_color();

@@ -2,6 +2,7 @@
 
 FNRBTree::FNRBTree() : RBTree(nullptr){}
 
+// Recurisvely search for a given first name
 void FNRBTree::Search_Helper(Node* root, std::vector<Person*> &vec, std::string val){
     if (!root) {
         return;
@@ -13,6 +14,7 @@ void FNRBTree::Search_Helper(Node* root, std::vector<Person*> &vec, std::string 
     Search_Helper(root->right, vec, val);
 }
 
+// Insert a person by first name (wraps insert_helper)
 void FNRBTree::Insert(Person* p){
     {
         if (taken_ids.count(stoi(p->get_id()))) {
@@ -30,7 +32,7 @@ void FNRBTree::Insert(Person* p){
     }
 }
 
-
+// Recursively locates where to insert node and inserts
 Node* FNRBTree::Insert_Helper(Node* root, Person* p, Node*& newNode){
     if (!root){
         Node* n = new Node(p);
@@ -49,6 +51,7 @@ Node* FNRBTree::Insert_Helper(Node* root, Person* p, Node*& newNode){
     return root;
 }
 
+// Recurisvely find and delete from the first name tree
 Node* FNRBTree::Delete_Helper(Node* root, Person* target, Node*& successor, bool& color) {
     if (!root){
         return nullptr;

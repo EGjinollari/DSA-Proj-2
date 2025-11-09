@@ -3,6 +3,7 @@
 
 BDRBTree::BDRBTree() : RBTree(nullptr){}
 
+// Recurisvely search for a given birthday
 void BDRBTree::Search_Helper(Node* root, std::vector<Person*> &vec, std::string val){
     if (!root) {
         return;
@@ -14,6 +15,7 @@ void BDRBTree::Search_Helper(Node* root, std::vector<Person*> &vec, std::string 
     Search_Helper(root->right, vec, val);
 }
 
+// Insert a person by birthday (wraps insert_helper)
 void BDRBTree::Insert(Person* p){
     {
         if (taken_ids.count(stoi(p->get_id()))) {
@@ -31,7 +33,7 @@ void BDRBTree::Insert(Person* p){
     }
 }
 
-
+// Recursively locates where to insert node and inserts
 Node* BDRBTree::Insert_Helper(Node* root, Person* p, Node*& newNode){
     if (!root){
         Node* n = new Node(p);
@@ -50,6 +52,7 @@ Node* BDRBTree::Insert_Helper(Node* root, Person* p, Node*& newNode){
     return root;
 }
 
+// Recurisvely find and delete from the birthday tree
 Node* BDRBTree::Delete_Helper(Node* root, Person* target, Node*& successor, bool& color) {
     if (!root){
         return nullptr;

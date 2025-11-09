@@ -7,12 +7,8 @@
 #include "children_trees/oritree.h"
 #include "children_trees/destree.h"
 
+// Call all destructors
 RBForest::~RBForest(){
-
-    std::unordered_set<Person*> persons;
-    for (auto p : persons) {
-        delete p;
-    }
 
     delete id;
     delete fn;
@@ -22,7 +18,7 @@ RBForest::~RBForest(){
     delete des;
 }
 
-
+// Construct all trees
 RBForest::RBForest(){
     id = new IDRBTree();
     fn = new FNRBTree();
@@ -32,6 +28,8 @@ RBForest::RBForest(){
     des = new DESRBTree();
 }
 
+
+// Insert into all trees
 void RBForest::Insert(int id, std::string fn, std::string ln, int bday, std::string origin, std::string dest){
 
     Person* p = new Person(id, fn, ln, bday, origin, dest);
@@ -44,6 +42,7 @@ void RBForest::Insert(int id, std::string fn, std::string ln, int bday, std::str
     this->des->Insert(p);
 }
 
+// Delete from all trees
 void RBForest::Delete(Person* p){
 
     this->id->Delete(p);
@@ -56,6 +55,7 @@ void RBForest::Delete(Person* p){
     delete p;
 }
 
+// Search speciifc tree based on category
 std::vector<Person*> RBForest::Search(std::string category, std::string val){
     if (category == "id"){
         return id->Search(val);

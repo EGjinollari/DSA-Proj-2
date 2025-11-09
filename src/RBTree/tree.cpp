@@ -4,11 +4,12 @@ Node* RBTree::get_root(){
     return this->root;
 }
 
-
+// Return root
 RBTree::RBTree(Node* root){
     this->root = root;
 }
 
+// Recursive function to destroy a tree
 void RBTree::Destructor_Helper(Node* root){
     if (!root){
         return;
@@ -19,26 +20,35 @@ void RBTree::Destructor_Helper(Node* root){
     delete root;
 }
 
+// Destructor wrapper
 RBTree::~RBTree(){
     Destructor_Helper(root);
 }
 
+// Search wrappper that returns the results if any
 std::vector<Person*> RBTree::Search(std::string &name)  {
     std::vector<Person*> vec;
-    Search_Helper(root, vec, name);
+    Search_Helper(root, vec, name); // All children overide this to search by their unique categories.
     return vec;
 }
+
+
+// Rebalance the RBtree after a deletion has occured.
 void RBTree::DeleteBalance(Node* node) {
+    // Handle double black after deletion
     while (node != root && (node == nullptr || node->color == 0)) {
         Node* p = node->parent;
+        // Node is left child
         if (node == p->left) {
             Node* u = p->right;
+            // Case 1: sib red
             if (u && u->color == 1) {
                 u->flip_color();
                 p->flip_color();
                 LRotate(p);
                 u = p->right;
             }
+            // Case 1: black children / sib
             if ((!u->left || u->left->color == 0) && (!u->right || u->right->color == 0)) {
                 if (u) {
                     u->flip_color();
@@ -46,6 +56,7 @@ void RBTree::DeleteBalance(Node* node) {
                 node = p;
             } 
             else {
+                // Handle if left / right child is red
                 if (!u->right || u->right->color == 0) {
                     if (u->left) {
                         u->left->flip_color();
@@ -63,6 +74,7 @@ void RBTree::DeleteBalance(Node* node) {
                 node = root;
             }
         } 
+        // Repeat this process on if the node is a right child
         else {
             Node* u = p->left;
             if (u && u->color == 1) {
@@ -101,25 +113,26 @@ void RBTree::DeleteBalance(Node* node) {
     }
 }
 
-
+// Balance after RBTree insertion
 void RBTree::InsertBalance(Node* node){
     Node* p = nullptr;
     Node* gp = nullptr;
-
+    // Red node cant have red parents
     while((node != root) && (node->color == 1) && (node->parent->color == 1)){
         p = node->parent;
         gp = p->parent;
         if (!gp){break;}
-
+        // if parent is left child of grandparent
         if (p == gp->left){
             Node* u = gp->right;
-
+            // If uncle is red recolor
             if (u != nullptr && u->color == 1){
                 gp->flip_color();
                 p->flip_color();
                 u->flip_color();
                 node = gp;
             }
+            // If uncle is black rotate
             else{
                 if (node == p->right) {
                     LRotate(p);
@@ -133,6 +146,7 @@ void RBTree::InsertBalance(Node* node){
                 node = p;
             }
         }
+        // Repeated process for if parent is right child of grandparent
         else{
             Node* u = gp->left;
 
@@ -156,6 +170,7 @@ void RBTree::InsertBalance(Node* node){
             }
         }
     }
+    // Go to root then make it black
     while(node->parent != nullptr){
         node = node->parent;
     }
@@ -164,7 +179,7 @@ void RBTree::InsertBalance(Node* node){
 
 }
 
-
+// Delete a node from the red black tree. This wraps the recursive deletion and makes sure root is black
 void RBTree::Delete(Person* target){
     Node* node = nullptr;
     bool color = 1;
@@ -177,6 +192,7 @@ void RBTree::Delete(Person* target){
     }
 }
 
+// Left rotate utility function
 void RBTree::LRotate(Node* root){
     Node* right = root->right;
     root->right = right->left;
@@ -198,6 +214,7 @@ void RBTree::LRotate(Node* root){
 
 }
 
+// Right rotate utility function
 void RBTree::RRotate(Node* root){
     Node* left = root->left;
     root->left = left->right;
