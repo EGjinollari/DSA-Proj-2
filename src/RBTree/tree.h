@@ -12,15 +12,15 @@ class RBTree {
     RBTree(Node* root);
     virtual ~RBTree();
 
-    void Delete(Node* root, Person* target);
+    void Delete(Person* target);
     virtual Node* Delete_Helper(Node* root, Person* target, Node*& successor, bool& color) = 0;
     void Destructor_Helper(Node* root);
 
     std::vector<Person*> Search(std::string &val);
     virtual void Search_Helper(Node* root, std::vector<Person*> &vec, std::string val) = 0;
     
-    virtual void Insert(int id, std::string fn, std::string ln, int bday, std::string origin, std::string dest) = 0;
-    virtual Node* Insert_Helper(Node* root, Person* p, std::string val, Node*& newNode) = 0;
+    virtual void Insert(Person* p) = 0;
+    virtual Node* Insert_Helper(Node* root, Person* p, Node*& newNode) = 0;
 
     void InsertBalance(Node* node);
     void DeleteBalance(Node* node);

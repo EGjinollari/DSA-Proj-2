@@ -8,6 +8,12 @@
 #include "children_trees/destree.h"
 
 RBForest::~RBForest(){
+
+    std::unordered_set<Person*> persons;
+    for (auto p : persons) {
+        delete p;
+    }
+
     delete id;
     delete fn;
     delete ln;
@@ -28,26 +34,26 @@ RBForest::RBForest(){
 
 void RBForest::Insert(int id, std::string fn, std::string ln, int bday, std::string origin, std::string dest){
 
-    this->id->Insert(id, fn, ln, bday, origin, dest);
-    this->fn->Insert(id, fn, ln, bday, origin, dest);
-    this->ln->Insert(id, fn, ln, bday, origin, dest);
-    this->bd->Insert(id, fn, ln, bday, origin, dest);
-    this->ori->Insert(id, fn, ln, bday, origin, dest);
-    this->des->Insert(id, fn, ln, bday, origin, dest);
+    Person* p = new Person(id, fn, ln, bday, origin, dest);
+    
+    this->id->Insert(p); 
+    this->fn->Insert(p);
+    this->ln->Insert(p);
+    this->bd->Insert(p);
+    this->ori->Insert(p);
+    this->des->Insert(p);
 }
 
-void RBForest::Delete(std::string id){
+void RBForest::Delete(Person* p){
 
-    auto target = this->id->Search(id);
+    this->id->Delete(p);
+    this->fn->Delete(p);
+    this->ln->Delete(p);
+    this->bd->Delete(p);
+    this->ori->Delete(p);
+    this->des->Delete(p);
 
-    Person* p = target[0];
-
-    this->id->Delete(this->id->get_root(), p);
-    this->fn->Delete(this->fn->get_root(), p);
-    this->ln->Delete(this->ln->get_root(), p);
-    this->bd->Delete(this->bd->get_root(), p);
-    this->ori->Delete(this->ori->get_root(), p);
-    this->des->Delete(this->des->get_root(), p);
+    delete p;
 }
 
 std::vector<Person*> RBForest::Search(std::string category, std::string val){

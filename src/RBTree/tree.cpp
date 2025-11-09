@@ -165,10 +165,10 @@ void RBTree::InsertBalance(Node* node){
 }
 
 
-void RBTree::Delete(Node* root, Person* target){
+void RBTree::Delete(Person* target){
     Node* node = nullptr;
     bool color = 1;
-    this->root = Delete_Helper(root, target, node, color);
+    this->root = Delete_Helper(this->root, target, node, color);
     if (color == 0 && node){
         DeleteBalance(node);
     }

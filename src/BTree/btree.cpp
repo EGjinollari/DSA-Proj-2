@@ -142,38 +142,6 @@ void BTree::merge(BNode* node, int index){
     delete sib;
 }
 
-void BTree::merge(BNode* node, int index){
-    BNode* left_child = node->getChild(index);
-    BNode* right_child = node->getChild(index + 1);
-
-    string middle_key = node->getKey(index);
-    Person* middle_person = node->getPerson(index);
-    left_child->addKey(middle_key);
-    left_child->addPerson(middle_person);
-
-    int sibling_keys = right_child->getKeyCount();
-    for (int i = 0; i < sibling_keys; i++){
-        string current_key = right_child->getKey(i);
-        Person* current_person = right_child->getPerson(i);
-        left_child->addKey(current_key);
-        left_child->addPerson(current_person);
-    }
-
-    if (left_child->isLeaf() == false){
-        int sibling_children = right_child->getKeyCount() + 1;
-        for (int i = 0; i < sibling_children; i++){
-            BNode* current_child = right_child->getChild(i);
-            left_child->addChild(current_child);
-        }
-    }
-
-    node->removeKey(index);
-    node->removePerson(index);
-    node->removeChild(index + 1);
-    right_child->clearPersons();
-    delete right_child;
-}
-
 void BTree::transferPrev(BNode* node, int index){
     BNode* child = node->getChild(index);
     BNode* sib = node->getChild(index - 1);
@@ -232,17 +200,18 @@ void BTree::deleteHelper(BNode* node, string& key){
         if(node->isLeaf()){
             return;
         }
+        bool inSub = (index == node->getKeyCount());
+        if(node->getChild(index)->getKeyCount() < deg){
+            fill(node, index);
+        }
+        if(inSub && index > node->getKeyCount()){
+            deleteHelper(node->getChild(index - 1), key);
+        }
+        else{
+            deleteHelper(node->getChild(index), key);
+        }
     }
-    bool inSub = (index == node->getKeyCount());
-    if(node->getChild(index)->getKeyCount() < deg){
-        fill(node, index);
-    }
-    if(inSub && index > node->getKeyCount()){
-        deleteHelper(node->getChild(index - 1), key);
-    }
-    else{
-        deleteHelper(node->getChild(index), key);
-    }
+    
 }
 
 void BTree::Delete(string target) {
@@ -261,5 +230,22 @@ void BTree::Delete(string target) {
             root = root->getChild(0);
         }
         delete temp;
+    }
+}
+
+void BTree::fill(BNode* node, int index){
+    if (index != 0 && node->getChild(index - 1)->getKeyCount() > deg){
+        transferPrev(node, index);
+    }
+    else if (index != node->getKeyCount() && node->getChild(index + 1)->getKeyCount() >= deg){
+        transferNext(node, index);
+    }
+    else{
+        if (index != node->getKeyCount()){
+            merge(node, index);
+        }
+        else{
+            merge(node, index - 1);
+        }
     }
 }

@@ -181,11 +181,8 @@ int main() {
             << duration.count() / (id - 1) / 1000000000.0 << " seconds" << endl;
         }
         else if (action == "delete"){
-            cout << "Delete categories: id | first | last | birthday | origin | destination\n";
-            string category;
-            getline(cin, category);
 
-            cout << "Enter value to delete with: ";
+            cout << "Enter id to delete: ";
             string value;
             getline(cin, value);
 
@@ -197,10 +194,10 @@ int main() {
             vector<Person*> results;
 
             if (data_structure == "rbtree") {
-                results = rb_immigrant_data.Search(category, value);
+                results = rb_immigrant_data.Search("id", value);
             } 
             else {
-                results = b_immigrant_data.Search(category, value);
+                results = b_immigrant_data.Search("id", value);
             }
 
             
@@ -225,7 +222,7 @@ int main() {
 
             for (auto datapoint: results){
                 if (data_structure == "rbtree"){
-                    rb_immigrant_data.Delete(datapoint->get_id()); 
+                    rb_immigrant_data.Delete(datapoint); 
                 }
                 else{
                    b_immigrant_data.Delete(datapoint->get_id()); 
@@ -234,9 +231,8 @@ int main() {
 
             auto duration = std::chrono::high_resolution_clock::now() - start_time;
 
-            cout << "Deleting by people with the " << category << ' ' << value << " resulted in " << results.size() << " deletions and took: " <<  
-            duration.count() / 1000000000.0 << " seconds"<< endl << "On average a "<< data_structure  << " deletion took: " 
-            << duration.count() / (id - 1) / 1000000000.0 << " seconds" << endl;
+            cout << "Deleting the person with the id: " << value << " resulted in " << results.size() << " deletions and took: " <<  
+            duration.count() / 1000000000.0 << " seconds"<< endl;
 
         }
     }

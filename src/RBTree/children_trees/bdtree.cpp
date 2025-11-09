@@ -1,4 +1,5 @@
 #include "bdtree.h"
+#include <iostream>
 
 BDRBTree::BDRBTree() : RBTree(nullptr){}
 
@@ -13,18 +14,17 @@ void BDRBTree::Search_Helper(Node* root, std::vector<Person*> &vec, std::string 
     Search_Helper(root->right, vec, val);
 }
 
-void BDRBTree::Insert(int id, std::string fn, std::string ln, int bday, std::string origin, std::string dest){
+void BDRBTree::Insert(Person* p){
     {
-        if (taken_ids.count(id)) {
+        if (taken_ids.count(stoi(p->get_id()))) {
         return;
         }
 
-        Person* p = new Person(id, fn, ln, bday, origin, dest);
         Node* new_node = nullptr;
-        root = Insert_Helper(root, p, std::to_string(bday), new_node);
+        root = Insert_Helper(root, p, new_node);
         if (new_node) {
             InsertBalance(new_node);
-            taken_ids.insert(id);
+            taken_ids.insert((stoi(p->get_id())));
             
         }
 
@@ -32,18 +32,18 @@ void BDRBTree::Insert(int id, std::string fn, std::string ln, int bday, std::str
 }
 
 
-Node* BDRBTree::Insert_Helper(Node* root, Person* p, std::string val, Node*& newNode){
+Node* BDRBTree::Insert_Helper(Node* root, Person* p, Node*& newNode){
     if (!root){
         Node* n = new Node(p);
         newNode = n;
         return n;
     }
-    if (stoi(root->get_data()->get_birthday()) < stoi(val)){
-        Node* rChild = Insert_Helper(root->right, p, val, newNode);
+    if (stoi(root->get_data()->get_birthday()) < stoi(p->get_birthday())){
+        Node* rChild = Insert_Helper(root->right, p, newNode);
         root->right = rChild;
         rChild->parent = root;
     }else{  
-        Node* lChild = Insert_Helper(root->left, p, val, newNode);
+        Node* lChild = Insert_Helper(root->left, p, newNode);
         root->left = lChild;
         lChild->parent = root;
     } 
@@ -54,9 +54,7 @@ Node* BDRBTree::Delete_Helper(Node* root, Person* target, Node*& successor, bool
     if (!root){
         return nullptr;
     }
-
     if (root->person == target){
-
         taken_ids.erase(std::stoi(root->get_data()->get_id()));
         color = root->color;
 
@@ -86,9 +84,8 @@ Node* BDRBTree::Delete_Helper(Node* root, Person* target, Node*& successor, bool
             succ = succ->left;
         }
 
-        Person* temp = root->person;
+        Person* temp = succ->person;
         root->person = succ->person;
-        succ->person = temp;
 
         root->right = Delete_Helper(root->right, temp, successor, color);
         if (root->right){

@@ -13,36 +13,36 @@ void FNRBTree::Search_Helper(Node* root, std::vector<Person*> &vec, std::string 
     Search_Helper(root->right, vec, val);
 }
 
-void FNRBTree::Insert(int id, std::string fn, std::string ln, int bday, std::string origin, std::string dest){
+void FNRBTree::Insert(Person* p){
     {
-        if (taken_ids.count(id)) {
+        if (taken_ids.count(stoi(p->get_id()))) {
         return;
         }
 
-        Person* p = new Person(id, fn, ln, bday, origin, dest);
         Node* new_node = nullptr;
-        root = Insert_Helper(root, p, fn, new_node);
+        root = Insert_Helper(root, p, new_node);
         if (new_node) {
             InsertBalance(new_node);
-            taken_ids.insert(id);
+            taken_ids.insert((stoi(p->get_id())));
             
         }
 
     }
 }
 
-Node* FNRBTree::Insert_Helper(Node* root, Person* p, std::string val, Node*& newNode){
+
+Node* FNRBTree::Insert_Helper(Node* root, Person* p, Node*& newNode){
     if (!root){
         Node* n = new Node(p);
         newNode = n;
         return n;
     }
-    if (root->get_data()->get_first() < val){
-        Node* rChild = Insert_Helper(root->right, p, val, newNode);
+    if (root->get_data()->get_first() < p->get_first()){
+        Node* rChild = Insert_Helper(root->right, p, newNode);
         root->right = rChild;
         rChild->parent = root;
     }else{  
-        Node* lChild = Insert_Helper(root->left, p, val, newNode);
+        Node* lChild = Insert_Helper(root->left, p, newNode);
         root->left = lChild;
         lChild->parent = root;
     } 
@@ -84,10 +84,9 @@ Node* FNRBTree::Delete_Helper(Node* root, Person* target, Node*& successor, bool
         while (succ->left){
             succ = succ->left;
         }
-
-        Person* temp = root->person;
+        
+        Person* temp = succ->person;
         root->person = succ->person;
-        succ->person = temp;
 
         root->right = Delete_Helper(root->right, temp, successor, color);
         if (root->right){

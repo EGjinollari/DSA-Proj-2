@@ -13,7 +13,7 @@ class RBForest{
 
     public:
     std::vector<Person*> Search(std::string category, std::string val);
-    void Delete(std::string id);
+    void Delete(Person* p);
     void Insert(int id, std::string fn, std::string ln, int bday, std::string origin, std::string dest);
     RBForest();
     ~RBForest();
