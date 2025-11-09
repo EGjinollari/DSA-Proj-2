@@ -196,28 +196,19 @@ int main() {
 
             vector<Person*> results;
 
-            
-
-            if (data_structure == "rbtree"){
+            if (data_structure == "rbtree") {
                 results = rb_immigrant_data.Search(category, value);
-                 start_time = std::chrono::high_resolution_clock::now();
-                for (auto i: results){
-                    rb_immigrant_data.Delete(i->get_id());
-                }
-            }
-            else{
+            } 
+            else {
                 results = b_immigrant_data.Search(category, value);
-                start_time = std::chrono::high_resolution_clock::now();
-                for (auto i: results){
-                    b_immigrant_data.Delete(i->get_id());
-                }
             }
-            
-            duration = std::chrono::high_resolution_clock::now() - start_time;
 
-             if (results.empty()) {
+            
+
+            if (results.empty()) {
                 cout << "No matches found.\n\n";
-            } else {
+            } 
+            else {
                 cout << "\n--- Search Results ---\n";
                 for (auto p : results) {
                     cout << "ID: " << p->get_id()
@@ -229,6 +220,20 @@ int main() {
                 }
                 cout << endl;
             }
+
+            auto start_time = std::chrono::high_resolution_clock::now();
+
+            for (auto datapoint: results){
+                if (data_structure == "rbtree"){
+                    rb_immigrant_data.Delete(datapoint->get_id()); 
+                }
+                else{
+                   b_immigrant_data.Delete(datapoint->get_id()); 
+                }
+            }
+
+            auto duration = std::chrono::high_resolution_clock::now() - start_time;
+
             cout << "Deleting by people with the " << category << ' ' << value << " resulted in " << results.size() << " deletions and took: " <<  
             duration.count() / 1000000000.0 << " seconds"<< endl << "On average a "<< data_structure  << " deletion took: " 
             << duration.count() / (id - 1) / 1000000000.0 << " seconds" << endl;

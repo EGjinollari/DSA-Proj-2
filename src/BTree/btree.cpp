@@ -1,8 +1,10 @@
 #include "btree.h"
 #include <iostream>
 
-BTree::BTree(int degree) {
-    this->degree = degree;
+using namespace std;
+
+BTree::BTree(int deg) {
+    this->deg = deg;
     root = nullptr;
 }
 
@@ -11,27 +13,32 @@ BTree::~BTree() {
 }
 
 void BTree::destructHelper(BNode* node) {
-    if (node) {
-        if (!node->isLeaf()) {
-            for (int i = 0; i <= node->getKeyCount(); i++) {
-                destructHelper(node->getChild(i));
-            }
-        }
-        delete node;
+    if (!node) {
+        return;
     }
+    if (!node->isLeaf()) {
+        for (int i = 0; i <= node->getKeyCount(); i++) {
+            destructHelper(node->getChild(i));
+        }
+    }
+    delete node;
 }
 
-void BTree::searchHelper(BNode* node, const std::string& target, std::vector<Person*>& results) {
-    if (!node) return;
-    
-    int i = 0;
-    while (i < node->getKeyCount() && target > node->getKey(i)) {
-        i++;
+void BTree::searchHelper(BNode* node, const string& target, vector<Person*>& results) {
+    if (!node) {
+        return;
     }
     
-    while (i < node->getKeyCount() && node->getKey(i) == target) {
-        results.push_back(node->getPerson(i));
-        i++;
+    int i = 0;
+    while (i < node->getKeyCount()) {
+        if (target > node->getKey(i)) {
+            i++;
+        } else if (node->getKey(i) == target) {
+            results.push_back(node->getPerson(i));
+            i++;
+        } else {
+            break;
+        }
     }
     
     if (!node->isLeaf()) {
@@ -39,22 +46,24 @@ void BTree::searchHelper(BNode* node, const std::string& target, std::vector<Per
     }
 }
 
-void BTree::insert(Person* person, const std::string& key) {
-    if (root == nullptr) {
-        root = new BNode(degree, true);
-        root->keys.push_back(key);
-        root->persons.push_back(person);
+void BTree::insert(Person* person, const string& key) {
+    if (!root) {
+        root = new BNode(deg, true);
+        root->addKey(key);
+        root->addPerson(person);
     } else {
-        if (root->keys.size() == 2 * degree - 1) {
-            BNode* s = new BNode(degree, false);
-            s->children.push_back(root);
+        if (root->getKeyCount() == 2 * deg - 1) {
+            BNode* s = new BNode(deg, false);
+            s->addChild(root);
             s->splitChild(0, root);
             
             int i = 0;
-            if (s->keys[0] < key) {
-                i++;
+            if (key > s->getKey(0)) {
+                i = 1;
+            } else {
+                i = 0;
             }
-            s->children[i]->insertNonFull(person, key);
+            s->getChild(i)->insertNonFull(person, key);
             
             root = s;
         } else {
@@ -64,133 +73,148 @@ void BTree::insert(Person* person, const std::string& key) {
 }
 
 void BTree::removeFromLeaf(BNode* node, int index){
-    delete node->persons[index];
-    node->keys.erase(node->keys.begin() + index);
-    node->persons.erase(node->persons.begin() + index);
+    delete node->getPerson(index);
+    node->removeKey(index);
+    node->removePerson(index);
 }
-
 
 void BTree::removeFromNonLeaf(BNode* node, int index){
-    auto key = node->getKey(index);
+    string key = node->getKey(index);
 
-    if (node->getChild(index)->getKeyCount() >= degree){
-        auto pred = getPredecessor(node, index);
-        node->keys[index] = pred;
+    int left_child_keys = node->getChild(index)->getKeyCount();
+    if (left_child_keys >= deg){
+        string pred = getPredecessor(node, index);
+        node->setKey(index, pred);
         deleteHelper(node->getChild(index), pred);
     }
-    else if (node->getChild(index + 1)->getKeyCount() >= degree){
-        auto succ = getSuccessor(node, index);
-        node->keys[index] = succ;
-        deleteHelper(node->getChild(index + 1), succ);
-    }
-    else{
-        merge(node, index);
-        deleteHelper(node->getChild(index), key);
+    else {
+        int right_child_keys = node->getChild(index + 1)->getKeyCount();
+        if (right_child_keys >= deg){
+            string succ = getSuccessor(node, index);
+            node->setKey(index, succ);
+            deleteHelper(node->getChild(index + 1), succ);
+        }
+        else{
+            merge(node, index);
+            deleteHelper(node->getChild(index), key);
+        }
     }
 }
 
-std::string BTree::getPredecessor(BNode* node, int index){
-    BNode* current = node->getChild(index);
-    while(!current->isLeaf()){
-        current = current->getChild(current->getKeyCount());
+string BTree::getPredecessor(BNode* node, int index){
+    BNode* curr = node->getChild(index);
+    while(!curr->isLeaf()){
+        curr = curr->getChild(curr->getKeyCount());
     }
-    return current->getKey(current->getKeyCount() - 1);
+    return curr->getKey(curr->getKeyCount() - 1);
 }
 
-std::string BTree::getSuccessor(BNode* node, int index){
-    BNode* current = node->getChild(index + 1);
-    while(!current->isLeaf()){
-        current = current->getChild(0);
+string BTree::getSuccessor(BNode* node, int index){
+    BNode* curr = node->getChild(index + 1);
+    while(!curr->isLeaf()){
+        curr = curr->getChild(0);
     }
-    return current->getKey(0);
+    return curr->getKey(0);
 }
 
 void BTree::merge(BNode* node, int index){
     BNode* child = node->getChild(index);
     BNode* sib = node->getChild(index + 1);
 
-    child->keys.push_back(node->getKey(index));
-    child->persons.push_back(node->getPerson(index));
+    child->addKey(node->getKey(index));
+    child->addPerson(node->getPerson(index));
 
     for (int i = 0; i < sib->getKeyCount(); i++){
-        child->keys.push_back(sib->getKey(i));
-        child->persons.push_back(sib->getPerson(i));
+        child->addKey(sib->getKey(i));
+        child->addPerson(sib->getPerson(i));
     }
 
     if (!child->isLeaf()){
         for (int i = 0; i <= sib->getKeyCount(); i++){
-            child->children.push_back(sib->getChild(i));
+            child->addChild(sib->getChild(i));
         }
     }
 
-    node->keys.erase(node->keys.begin() + index);
-    node->persons.erase(node->persons.begin() + index);
-    node->children.erase(node->children.begin() + index + 1);
-    sib->persons.clear();
+    node->removeKey(index);
+    node->removePerson(index);
+    node->removeChild(index + 1);
+    sib->clearPersons();
     delete sib;
 }
 
-void BTree::fill(BNode* node, int index){
-    if (index != 0 && node->getChild(index - 1)->getKeyCount() >= degree){
-        borrowFromPrev(node, index);
+void BTree::merge(BNode* node, int index){
+    BNode* left_child = node->getChild(index);
+    BNode* right_child = node->getChild(index + 1);
+
+    string middle_key = node->getKey(index);
+    Person* middle_person = node->getPerson(index);
+    left_child->addKey(middle_key);
+    left_child->addPerson(middle_person);
+
+    int sibling_keys = right_child->getKeyCount();
+    for (int i = 0; i < sibling_keys; i++){
+        string current_key = right_child->getKey(i);
+        Person* current_person = right_child->getPerson(i);
+        left_child->addKey(current_key);
+        left_child->addPerson(current_person);
     }
-    else if (index != node->getKeyCount() && node->getChild(index + 1)->getKeyCount() >= degree){
-        borrowFromNext(node, index);
-    }
-    else{
-        if (index != node->getKeyCount()){
-            merge(node, index);
+
+    if (left_child->isLeaf() == false){
+        int sibling_children = right_child->getKeyCount() + 1;
+        for (int i = 0; i < sibling_children; i++){
+            BNode* current_child = right_child->getChild(i);
+            left_child->addChild(current_child);
         }
-        else{
-            merge(node, index - 1);
-        }
     }
+
+    node->removeKey(index);
+    node->removePerson(index);
+    node->removeChild(index + 1);
+    right_child->clearPersons();
+    delete right_child;
 }
 
-void BTree::borrowFromPrev(BNode* node, int index){
+void BTree::transferPrev(BNode* node, int index){
     BNode* child = node->getChild(index);
     BNode* sib = node->getChild(index - 1);
-
-    child->keys.insert(child->keys.begin(), node->getKey(index - 1));
-    child->persons.insert(child->persons.begin(), node->getPerson(index - 1));
-
-    node->keys[index - 1] = sib->getKey(sib->getKeyCount() - 1);
-    node->persons[index - 1] = sib->getPerson(sib->getKeyCount() - 1);
-
-    if (!!child->isLeaf()){
-        child->children.insert(child->children.begin(), sib->getChild(sib->getKeyCount()));
-    }
-
-    sib->keys.pop_back();
-    sib->persons.pop_back();
-    if (!sib->isLeaf()){
-        sib->children.pop_back();
-    }
-}
-
-void BTree::borrowFromNext(BNode* node, int index){
-    BNode* child = node->getChild(index);
-    BNode* sib = node->getChild(index + 1);
-
-    child->keys.push_back(node->getKey(index));
-    child->persons.push_back(node->getPerson(index));
-    node->keys[index] = sib->getKey(0);
-    node->persons[index] = sib->getPerson(0);
+    child->insertKey(0, node->getKey(index - 1));
+    child->insertPerson(0, node->getPerson(index - 1));
+    node->setKey(index - 1, sib->getKey(sib->getKeyCount() - 1));
+    node->setPerson(index - 1, sib->getPerson(sib->getKeyCount() - 1));
 
     if (!child->isLeaf()){
-        child->children.push_back(sib->getChild(0));
+        child->insertChild(0, sib->getChild(sib->getKeyCount()));
     }
 
-    sib->keys.erase(sib->keys.begin());
-    sib->persons.erase(sib->persons.begin());
-    
-    if(!sib->isLeaf()){
-        sib->children.erase(sib->children.begin());
-    }
+    sib->popBackKey();
+    sib->popBackPerson();
 
+    if (!sib->isLeaf()){
+        sib->popBackChild();
+    }
 }
 
-void BTree::deleteHelper(BNode* node, std::string& key){
+void BTree::transferNext(BNode* node, int index){
+    BNode* child = node->getChild(index);
+    BNode* sib = node->getChild(index + 1);
+    child->addKey(node->getKey(index));
+    child->addPerson(node->getPerson(index));
+    node->setKey(index, sib->getKey(0));
+    node->setPerson(index, sib->getPerson(0));
+
+    if (!child->isLeaf()){
+        child->addChild(sib->getChild(0));
+    }
+
+    sib->removeKey(0);
+    sib->removePerson(0);
+    
+    if(!sib->isLeaf()){
+        sib->removeChild(0);
+    }
+}
+
+void BTree::deleteHelper(BNode* node, string& key){
     int index = 0;
     while (index < node->getKeyCount() && node->getKey(index) < key){
         index ++;
@@ -210,7 +234,7 @@ void BTree::deleteHelper(BNode* node, std::string& key){
         }
     }
     bool inSub = (index == node->getKeyCount());
-    if(node->getChild(index)->getKeyCount() < degree){
+    if(node->getChild(index)->getKeyCount() < deg){
         fill(node, index);
     }
     if(inSub && index > node->getKeyCount()){
@@ -221,11 +245,10 @@ void BTree::deleteHelper(BNode* node, std::string& key){
     }
 }
 
-void BTree::Delete(std::string target) {
+void BTree::Delete(string target) {
     if (!root){
         return;
     }
-
 
     deleteHelper(root, target);
 

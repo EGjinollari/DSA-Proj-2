@@ -12,8 +12,8 @@ class RBTree {
     RBTree(Node* root);
     virtual ~RBTree();
 
-    void Delete(Node* root, std::string target);
-    virtual Node* Delete_Helper(Node* root, std::string target, Node*& successor, bool& color) = 0;
+    void Delete(Node* root, Person* target);
+    virtual Node* Delete_Helper(Node* root, Person* target, Node*& successor, bool& color) = 0;
     void Destructor_Helper(Node* root);
 
     std::vector<Person*> Search(std::string &val);

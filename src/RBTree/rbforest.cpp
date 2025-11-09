@@ -39,12 +39,15 @@ void RBForest::Insert(int id, std::string fn, std::string ln, int bday, std::str
 void RBForest::Delete(std::string id){
 
     auto target = this->id->Search(id);
-    this->id->Delete(this->id->get_root(), target[0]->get_id());
-    this->fn->Delete(this->fn->get_root(), target[0]->get_first());
-    this->ln->Delete(this->ln->get_root(), target[0]->get_last());
-    this->bd->Delete(this->bd->get_root(), target[0]->get_birthday());
-    this->ori->Delete(this->ori->get_root(), target[0]->get_origin());
-    this->des->Delete(this->des->get_root(), target[0]->get_destination());
+
+    Person* p = target[0];
+
+    this->id->Delete(this->id->get_root(), p);
+    this->fn->Delete(this->fn->get_root(), p);
+    this->ln->Delete(this->ln->get_root(), p);
+    this->bd->Delete(this->bd->get_root(), p);
+    this->ori->Delete(this->ori->get_root(), p);
+    this->des->Delete(this->des->get_root(), p);
 }
 
 std::vector<Person*> RBForest::Search(std::string category, std::string val){

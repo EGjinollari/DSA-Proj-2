@@ -49,38 +49,66 @@ Node* IDRBTree::Insert_Helper(Node* root, Person* p, std::string val, Node*& new
     return root;
 }
 
-Node* IDRBTree::Delete_Helper(Node* root, std::string target, Node*& successor, bool& color) {
-    if (!root) return nullptr;
+Node* IDRBTree::Delete_Helper(Node* root, Person* target, Node*& successor, bool& color) {
+    if (!root){
+        return nullptr;
+    }
 
-    std::string curr = root->get_data()->get_id();
-    if (target < curr)
-        root->left = Delete_Helper(root->left, target, successor, color);
-    else if (target > curr)
-        root->right = Delete_Helper(root->right, target, successor, color);
-    else {
+    if (root->person == target){
+
         taken_ids.erase(std::stoi(root->get_data()->get_id()));
         color = root->color;
-        if (!root->left && !root->right) {
+
+        if (!root->left && !root->right){
+            successor = root->parent;
             delete root;
             return nullptr;
-        } else if (!root->left) {
-           Node* temp = root->right;
+        }
+
+        if (!root->left){
+            Node* temp = root->right;
             temp->parent = root->parent;
             successor = temp;
             delete root;
             return temp;
-        } else if (!root->right) {
+        }
+        if (!root->right){
             Node* temp = root->left;
             temp->parent = root->parent;
             successor = temp;
             delete root;
             return temp;
-        } else {
-            Node* succ = root->right;
-            while (succ->left) succ = succ->left;
-            root->set_data(succ->get_data());
-            root->right = Delete_Helper(root->right, succ->get_data()->get_id(), successor, color);
+        }
+        
+        Node* succ = root->right;
+        while (succ->left){
+            succ = succ->left;
+        }
+
+        Person* temp = root->person;
+        root->person = succ->person;
+        succ->person = temp;
+
+        root->right = Delete_Helper(root->right, temp, successor, color);
+        if (root->right){
+            root->right->parent = root;
+        }
+        return root;
+    }
+
+    int curr = stoi(root->get_data()->get_id()); 
+    if (stoi(target->get_id()) < curr){
+        root->left = Delete_Helper(root->left, target, successor, color);
+        if (root->left){
+            root->left->parent = root;
         }
     }
+    else{
+        root->right = Delete_Helper(root->right, target, successor, color);
+        if (root->right){
+            root->right->parent = root;
+        }
+    }
+
     return root;
 }
